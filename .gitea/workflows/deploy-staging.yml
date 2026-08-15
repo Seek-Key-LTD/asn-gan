@@ -1,0 +1,27 @@
+name: Deploy Staging (NUC)
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  deploy-staging:
+    runs-on: nuc   # staging就跑在NUC本机
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: dev
+
+      - name: Rsync to staging dir
+        run: |
+          set -e
+          echo "🚀 [CI/CD] dev → NUC staging 目录同步..."
+          rsync -avz --delete --exclude '.git' --exclude '.venv' --exclude '__pycache__' --exclude 'node_modules' ./ /home/ben/projects/github/kunpengzhi-ai/
+          echo "✅ Staging部署完成"
+
+      - name: Health check
+        run: |
+          sleep 2
+          curl -s -o /dev/null -w "staging HTTP %{http_code}\n" http://127.0.0.1:8501/ || echo "⚠️ 8501未响应，服务可能需手动重启"

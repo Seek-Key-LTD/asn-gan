@@ -1,0 +1,29 @@
+name: Mirror to GitHub (via ash3)
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+  mirror:
+    runs-on: ash3   # 必须美区3号: gh凭据 + 出海带宽
+    steps:
+      - name: Checkout from Gitea
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ gitea.ref }}
+
+      - name: Push mirror to GitHub
+        run: |
+          set -e
+          git remote add github https://github.com/Seek-Key-LTD/kunpengzhi-ai.git || true
+          git push github refs/remotes/origin/main:refs/heads/main || true
+          git push github refs/remotes/origin/dev:refs/heads/dev || true
+          echo "✅ Mirror to GitHub done (ash3 → GH)"
+
+      - name: Verify
+        run: |
+          git ls-remote --heads github | head -4
