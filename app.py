@@ -41,10 +41,16 @@ class LobbyLandingMiddleware(BaseHTTPMiddleware):
 chainlit_app.add_middleware(LobbyLandingMiddleware)
 
 # 首页直达太虚大厅 (hao123式导航)
+# 注意: chainlit自带 /{full_path:path} catch-all, 必须把lobby路由插到表头
+from fastapi.responses import FileResponse
+
 @chainlit_app.get("/lobby")
 async def lobby_redirect():
-    from fastapi.responses import FileResponse
     return FileResponse("public/lobby.html")
+
+# 把 /lobby 挪到路由表最前 (压过chainlit的catch-all)
+_lobby_routes = [r for r in chainlit_app.router.routes if getattr(r, 'path', '') == '/lobby']
+chainlit_app.router.routes = _lobby_routes + [r for r in chainlit_app.router.routes if getattr(r, 'path', '') != '/lobby']
 
 import uuid
 import re
