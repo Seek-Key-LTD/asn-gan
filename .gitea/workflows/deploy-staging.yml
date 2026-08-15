@@ -1,5 +1,4 @@
 name: Deploy Staging (NUC)
-
 on:
   push:
     branches:
@@ -7,21 +6,32 @@ on:
 
 jobs:
   deploy-staging:
-    runs-on: nuc   # staging就跑在NUC本机
+    runs-on: nuc
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           ref: dev
 
-      - name: Rsync to staging dir
+      - name: Rsync to staging dir (Projects大写P·运行目录)
         run: |
           set -e
-          echo "🚀 [CI/CD] dev → NUC staging 目录同步..."
-          rsync -avz --delete --exclude '.git' --exclude '.venv' --exclude '__pycache__' --exclude 'node_modules' ./ /home/ben/projects/github/kunpengzhi-ai/
-          echo "✅ Staging部署完成"
+          echo "🚀 [CI/CD] dev → NUC staging 同步..."
+          rsync -az --exclude '.git' --exclude '.venv' --exclude '__pycache__' --exclude 'node_modules' --exclude 'chainlit.db' --exclude '.files' ./ /home/ben/Projects/github/kunpengzhi-ai/
+          echo "✅ Staging部署完成 (不删运行时文件)"
+
+      - name: Restart chainlit staging
+        run: |
+          # 杀掉8501上的streamlit(历史遗留)和旧chainlit
+          pkill -f "streamlit run streamlit_app.py" 2>/dev/null || true
+          pkill -f "chainlit run app.py" 2>/dev/null || true
+          sleep 2
+          # 起chainlit
+          cd /home/ben/Projects/github/kunpengzhi-ai
+          nohup .venv/bin/chainlit run app.py -h --port 8501 > /tmp/kunpengzhi-staging.log 2>&1 &
+          sleep 5
 
       - name: Health check
         run: |
-          sleep 2
-          curl -s -o /dev/null -w "staging HTTP %{http_code}\n" http://127.0.0.1:8501/ || echo "⚠️ 8501未响应，服务可能需手动重启"
+          curl -s -o /dev/null -w "staging(8501) HTTP %{http_code}\n" http://127.0.0.1:8501/lobby
+          curl -s -o /dev/null -w "root(8501) HTTP %{http_code}\n" http://127.0.0.1:8501/

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>太虚螺线谱 (Spiral Notation) AGI 调式评估与作曲引擎</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #060913;
+      color: #e0f7fc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #sidebar {
+      width: 340px;
+      background: rgba(10, 16, 32, 0.9);
+      border-right: 1px solid rgba(0, 240, 255, 0.2);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: 5px 0 25px rgba(0,0,0,0.5);
+    }
+    h1 {
+      font-size: 18px;
+      color: #00f0ff;
+      letter-spacing: 1px;
+      text-shadow: 0 0 8px rgba(0,240,255,0.5);
+    }
+    .panel-box {
+      background: rgba(0, 240, 255, 0.05);
+      border: 1px solid rgba(0, 240, 255, 0.15);
+      border-radius: 6px;
+      padding: 12px;
+    }
+    .panel-box label {
+      font-size: 12px;
+      color: #8ab4f8;
+      display: block;
+      margin-bottom: 6px;
+    }
+    select, button, input {
+      width: 100%;
+      padding: 8px 12px;
+      background: #0d1527;
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      color: #00f0ff;
+      border-radius: 4px;
+      font-size: 13px;
+      outline: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: rgba(0, 240, 255, 0.2);
+      box-shadow: 0 0 10px rgba(0,240,255,0.3);
+    }
+    .score-badge {
+      font-size: 32px;
+      font-weight: bold;
+      color: #00ff66;
+      text-shadow: 0 0 10px rgba(0,255,102,0.4);
+      text-align: center;
+      margin: 8px 0;
+    }
+    .status-text {
+      text-align: center;
+      font-size: 12px;
+      color: #ff9900;
+    }
+    #stage-container {
+      flex: 1;
+      position: relative;
+      background: radial-gradient(circle at center, #0d1933 0%, #04070d 100%);
+      width: 100%;
+      height: 100%;
+    }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+    }
+    .legend {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(0,0,0,0.6);
+      padding: 10px 16px;
+      border-radius: 4px;
+      border: 1px solid rgba(255,255,255,0.1);
+      font-size: 12px;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="sidebar">
+    <h1>🌀 螺线谱 (Spiral Notation) AGI 引擎</h1>
+    
+    <div class="panel-box">
+      <label>1. 选择八席位 / 工位调式 (Ground)</label>
+      <select id="seatSelect">
+        <option value="ludongbin">☰ 乾 (吕洞宾) - 根音 G | 水局</option>
+        <option value="hexian-gu">☷ 坤 (何仙姑) - 根音 C | 木局</option>
+        <option value="zhangguolao">☶ 艮 (张果老) - 根音 D | 火局</option>
+        <option value="hanxiangzi">☱ 兑 (韩湘子) - 根音 A | 金局</option>
+        <option value="hanzhongli">☲ 离 (汉钟离) - 根音 Eb | 金局</option>
+        <option value="lancaihe">☵ 坎 (蓝采和) - 根音 Ab | 水局</option>
+        <option value="caoguojiu">☳ 震 (曹国舅) - 根音 Bb | 木局</option>
+        <option value="tieguai-li">☴ 巽 (铁拐李) - 根音 Db | 火局</option>
+      </select>
+    </div>
+
+    <div class="panel-box">
+      <label>2. 模拟 AI 作曲 / 非标调式生成测试</label>
+      <button id="btnPlayMozart" style="background: rgba(0,255,102,0.15); border-color: #00ff66; color: #00ff66;">🎹 播放莫扎特《小星星》和声亮灯轨迹 (Mozart / Ableton)</button>
+      <button id="btnPlayStandard" style="margin-top: 8px;">播放标准三合局和弦 (12ET)</button>
+      <button id="btnPlayMicrotonal" style="margin-top: 8px;">播放非标准调式微音 (Microtonal Hz)</button>
+      <button id="btnPlayBreach" style="margin-top: 8px; background: rgba(255,0,85,0.2); border-color: #ff0055; color: #ff3366;">模拟 AI 破格偏离测试</button>
+    </div>
+
+    <div class="panel-box">
+      <label>3. 礼乐鉴赏值 (Appreciation Value) 评估探针</label>
+      <div class="score-badge" id="scoreDisplay">100</div>
+      <div class="status-text" id="statusDisplay">状态：礼乐一致 (符合席位 Ground)</div>
+    </div>
+
+    <div class="panel-box" style="flex: 1; overflow-y: auto;">
+      <label>实时音符日志与和声雷达</label>
+      <div id="logConsole" style="font-size: 11px; font-family: monospace; color: #78a9ff; line-height: 1.6;"></div>
+    </div>
+  </div>
+
+  <div id="stage-container">
+    <canvas id="spiralCanvas"></canvas>
+    <div class="legend">
+      <span>● 蓝色线条: 12地支螺旋坐标</span> | <span>▲ 三角彩框: 席位三合局和声约束</span>
+    </div>
+  </div>
+
+  <script type="module">
+    import { SpiralNotationEngine } from './spiral-engine.js';
+
+    const canvas = document.getElementById('spiralCanvas');
+    const engine = new SpiralNotationEngine({ canvas });
+
+    let activeSeat = 'ludongbin';
+    let currentActiveNotes = [];
+
+    const seatSelect = document.getElementById('seatSelect');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const statusDisplay = document.getElementById('statusDisplay');
+    const logConsole = document.getElementById('logConsole');
+
+    function log(msg) {
+      logConsole.innerHTML = `> ${msg}<br>` + logConsole.innerHTML;
+    }
+
+    seatSelect.addEventListener('change', (e) => {
+      activeSeat = e.target.value;
+      currentActiveNotes = [];
+      updateEvaluation([]);
+      engine.render([], activeSeat);
+      log(`切换席位调式: ${seatSelect.options[seatSelect.selectedIndex].text}`);
+    });
+
+    function updateEvaluation(notes) {
+      const evalRes = engine.evaluateAppreciation(notes, activeSeat);
+      scoreDisplay.innerText = evalRes.score;
+      statusDisplay.innerText = `席位: ${evalRes.seat} (${evalRes.bureau}) | 状态: ${evalRes.status}`;
+      if (evalRes.score >= 85) scoreDisplay.style.color = '#00ff66';
+      else if (evalRes.score >= 60) scoreDisplay.style.color = '#ff9900';
+      else scoreDisplay.style.color = '#ff0055';
+    }
+
+    // 莫扎特《小星星》主题旋律 (C4 C4 G4 G4 A4 A4 G4 | F4 F4 E4 E4 D4 D4 C4)
+    const mozartNotes = [
+      { note: 'C4', freq: 261.63 }, { note: 'C4', freq: 261.63 },
+      { note: 'G4', freq: 392.00 }, { note: 'G4', freq: 392.00 },
+      { note: 'A4', freq: 440.00 }, { note: 'A4', freq: 440.00 },
+      { note: 'G4', freq: 392.00 },
+      { note: 'F4', freq: 349.23 }, { note: 'F4', freq: 349.23 },
+      { note: 'E4', freq: 329.63 }, { note: 'E4', freq: 329.63 },
+      { note: 'D4', freq: 293.66 }, { note: 'D4', freq: 293.66 },
+      { note: 'C4', freq: 261.63 }
+    ];
+
+    document.getElementById('btnPlayMozart').addEventListener('click', () => {
+      log(`[Ableton / 莫扎特] 开始演奏《小星星变奏曲》主题旋律并亮灯...`);
+      currentActiveNotes = [];
+
+      mozartNotes.forEach((n, idx) => {
+        setTimeout(() => {
+          engine.playNote(n.freq, 0.4, 'sine');
+          currentActiveNotes.push({ freq: n.freq, color: '#00ff66' });
+          if (currentActiveNotes.length > 4) currentActiveNotes.shift(); // 维持动态 4 音符亮灯轨迹
+          
+          updateEvaluation(currentActiveNotes);
+          engine.render(currentActiveNotes, activeSeat);
+          log(`♪ 弹响音符 ${n.note} (${n.freq}Hz) -> 螺线谱亮灯`);
+        }, idx * 400);
+      });
+    });
+      const seat = engine.seats[activeSeat];
+      log(`[AI 谱曲] 生成标准 12ET 席位和弦 [${seat.bureau}]...`);
+      
+      // G4, C5, Eb5
+      const testFreqs = [392.00, 523.25, 622.25];
+      currentActiveNotes = testFreqs.map(f => ({ freq: f, color: '#00f0ff' }));
+
+      testFreqs.forEach((f, idx) => {
+        setTimeout(() => {
+          engine.playNote(f, 0.8);
+        }, idx * 250);
+      });
+
+      updateEvaluation(testFreqs);
+      engine.render(currentActiveNotes, activeSeat);
+    });
+
+    // 播放非标准调式微音 (Microtonal Hz)
+    document.getElementById('btnPlayMicrotonal').addEventListener('click', () => {
+      log(`[AI 谱曲] 生成非标准调式微音 (Microtonal 435.5Hz, 518.2Hz)...`);
+      
+      const microFreqs = [435.5, 518.2, 654.1];
+      currentActiveNotes = microFreqs.map(f => ({ freq: f, color: '#ffd700' }));
+
+      microFreqs.forEach((f, idx) => {
+        setTimeout(() => {
+          engine.playNote(f, 0.6, 'triangle');
+        }, idx * 200);
+      });
+
+      updateEvaluation(microFreqs);
+      engine.render(currentActiveNotes, activeSeat);
+    });
+
+    // 模拟 AI 破格偏离测试
+    document.getElementById('btnPlayBreach').addEventListener('click', () => {
+      log(`[AI 破格] 生成偏离席位 Ground 根音的音符序列...`);
+      
+      const breachFreqs = [466.16, 587.33, 739.99]; // 偏离和弦
+      currentActiveNotes = breachFreqs.map(f => ({ freq: f, color: '#ff0055' }));
+
+      breachFreqs.forEach((f, idx) => {
+        setTimeout(() => {
+          engine.playNote(f, 0.5, 'sawtooth');
+        }, idx * 150);
+      });
+
+      updateEvaluation(breachFreqs);
+      engine.render(currentActiveNotes, activeSeat);
+    });
+
+    // 初始渲染
+    engine.render([], activeSeat);
+  </script>
+</body>
+</html>

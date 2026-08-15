@@ -18,6 +18,21 @@ import os
 import asyncio
 import json
 import logging
+# ─── FastAPI 根部片场调度路由挂载 ──────────────────
+from chainlit.server import app as chainlit_app
+from fastapi.staticfiles import StaticFiles
+
+# 挂载 public/ 目录下的所有静态资源（含螺线谱、小花组直播宫）到片场根部
+if os.path.exists("public"):
+    chainlit_app.mount("/public", StaticFiles(directory="public"), name="public_static")
+    chainlit_app.mount("/spiral-notation", StaticFiles(directory="public/spiral-notation", html=True), name="spiral_static")
+
+# 首页直达太虚大厅 (hao123式导航)
+@chainlit_app.get("/lobby")
+async def lobby_redirect():
+    from fastapi.responses import FileResponse
+    return FileResponse("public/lobby.html")
+
 import uuid
 import re
 from typing import Optional, List, Dict
