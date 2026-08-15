@@ -27,6 +27,19 @@ if os.path.exists("public"):
     chainlit_app.mount("/public", StaticFiles(directory="public"), name="public_static")
     chainlit_app.mount("/spiral-notation", StaticFiles(directory="public/spiral-notation", html=True), name="spiral_static")
 
+
+# 首页落地重定向: 无场景参数的 / 直达太虚大厅 (home page)
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.responses import RedirectResponse
+
+class LobbyLandingMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        if request.url.path == "/" and not request.query_params.get("scenario"):
+            return RedirectResponse("/lobby", status_code=302)
+        return await call_next(request)
+
+chainlit_app.add_middleware(LobbyLandingMiddleware)
+
 # 首页直达太虚大厅 (hao123式导航)
 @chainlit_app.get("/lobby")
 async def lobby_redirect():
