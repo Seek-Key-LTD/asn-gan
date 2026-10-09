@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy-staging:
-    runs-on: nuc
+    runs-on: nuc2
     steps:
       - name: Checkout
         uses: actions/checkout@v4

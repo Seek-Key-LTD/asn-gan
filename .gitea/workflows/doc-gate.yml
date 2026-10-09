@@ -9,7 +9,7 @@ on:
 
 jobs:
   doc-gate:
-    runs-on: ubuntu-latest
+    runs-on: [linux, amd64, nuc2]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
