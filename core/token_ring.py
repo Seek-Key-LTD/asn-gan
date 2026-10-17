@@ -16,6 +16,9 @@ import time
 import openai
 
 
+import os
+
+
 class RobertTokenRingEngine:
     def __init__(self, base_url, api_key, article_text, scenario="court"):
         self.client = openai.OpenAI(base_url=base_url, api_key=api_key)
@@ -24,7 +27,7 @@ class RobertTokenRingEngine:
         self.token_holder = "ruby"          # 令牌初始在审判长（红宝石）手中
         self.shared_context = []            # 共享法庭笔录上下文 (Shared Memory)
         self.steps = []                     # 过程元数据：每步耗时/模型/上下文注入清单
-        self._model = "nova-deepseek-v4-flash-aggr"
+        self._model = os.getenv("DEBATE_MODEL", "tencent/hy3:free")
 
     # ---- 共享上下文 ----
     def add_to_shared_context(self, avatar, content, team=""):

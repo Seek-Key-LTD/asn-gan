@@ -9,78 +9,45 @@
 """
 
 import datetime
+import os
 import time
 
 import openai
 
-OPENAI_BASE_URL = "https://litellm.capitaltrain.cn/v1"
+from core.agent_card import AgentCardRegistry
 
-# 10 席位定义（阜阳中院 · 含被告人尊长 leopard@suse）
-SEATS_DICT = {
-    "judge_chief": {
-        "role": "🏛️ 审判长",
-        "agent": "ruby",
-        "node": "nuc",
-        "model": "nova-deepseek-v4-flash-aggr",
-        "team": "judge"
-    },
-    "defendant": {
-        "role": "👤 被告人 (尊长)",
-        "agent": "leopard",
-        "node": "suse",
-        "model": "azure-deepseek-v4-flash",
-        "team": "defendant"
-    },
-    "prosecutor_chief": {
-        "role": "⚖️ 首席公诉人 (阜阳市检察院)",
-        "agent": "topaz",
-        "node": "raccoon",
-        "model": "topaz-deepseek-v4-flash",
-        "team": "prosecutor"
-    },
-    "prosecutor_asst1": {
-        "role": "⚖️ 助理公诉人 1",
-        "agent": "carbonado",
-        "node": "pve2",
-        "model": "carbonado-deepseek-v4-flash",
-        "team": "prosecutor"
-    },
-    "defense_chief": {
-        "role": "🛡️ 首席辩护律师",
-        "agent": "diamond",
-        "node": "pve",
-        "model": "diamond-deepseek-v4-flash",
-        "team": "defense"
-    },
-    "defense_asst1": {
-        "role": "🛡️ 辩护助理 1",
-        "agent": "argentite",
-        "node": "pve3",
-        "model": "argentite-deepseek-v4-flash",
-        "team": "defense"
-    },
-    "defense_asst2": {
-        "role": "🛡️ 辩护助理 2",
-        "agent": "agate",
-        "node": "xgp",
-        "model": "agate-deepseek-v4-flash",
-        "team": "defense"
-    },
-    "judge_a": {
-        "role": "🏛️ 审判员 A (常理)",
-        "agent": "luna",
-        "node": "onecloud2",
-        "model": "azure-deepseek-v4-flash",
-        "team": "judge"
-    },
-    "judge_b": {
-        "role": "🏛️ 审判员 B (程序)",
-        "agent": "meigui",
-        "node": "ash1",
-        "model": "azure-deepseek-v4-flash",
-        "team": "judge"
+OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "https://litellm.git4ta.fun/v1")
+_DEFAULT_ENGINE = os.getenv("DEBATE_MODEL", "tencent/hy3:free")
+
+
+def _build_court_seat(agent_key: str, role: str, team: str) -> dict:
+    card = AgentCardRegistry.get(agent_key)
+    return {
+        "role": role,
+        "agent": agent_key,
+        "display_name": card.display_name if card else agent_key,
+        "soul_name": card.soul_name if card else "",
+        "node": card.node if card else "fleet",
+        "matrix_id": card.matrix_id if card else "",
+        "model": card.active_engine if card else _DEFAULT_ENGINE,
+        "team": team,
+        "agent_card": card,
     }
+
+
+# 10 席位定义（阜阳中院 · 智能车座底座驱动）
+SEATS_DICT = {
+    "judge_chief": _build_court_seat("ruby", "🏛️ 审判长", "judge"),
+    "defendant": _build_court_seat("leopard", "👤 被告人 (尊长)", "defendant"),
+    "prosecutor_chief": _build_court_seat("topaz", "⚖️ 首席公诉人 (阜阳市检察院)", "prosecutor"),
+    "prosecutor_asst1": _build_court_seat("carbonado", "⚖️ 助理公诉人 1", "prosecutor"),
+    "defense_chief": _build_court_seat("diamond", "🛡️ 首席辩护律师", "defense"),
+    "defense_asst1": _build_court_seat("argentite", "🛡️ 辩护助理 1", "defense"),
+    "defense_asst2": _build_court_seat("agate", "🛡️ 辩护助理 2", "defense"),
+    "judge_a": _build_court_seat("luna", "🏛️ 审判员 A (常理)", "judge"),
+    "judge_b": _build_court_seat("meigui", "🏛️ 审判员 B (程序)", "judge"),
 }
+
 
 # 11 步令牌环庭审流程（阜阳案 · 沉静严肃）
 ROBERTS_STEPS = [

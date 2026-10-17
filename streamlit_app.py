@@ -172,266 +172,44 @@ SCENARIOS = {
     "fengyue": "🍶 潇洒风月风流雅集模式"
 }
 
-# ☀️ Vault Space 12 黄道内阁 (Jasper 落宫规划至 vault LXC)
+# ==============================================================================
+# ☀️ Vault Space 12 黄道内阁 & 🌸 昴宿七姐妹星团 (Agent Card 智能车座底座)
+# ==============================================================================
+# 架构铁律：
+# 席位 (Seat) 是智能车座 (Agent Card)，模型代表底层发动机。
+# 席位直接绑定全舰队 Agent 身份契约，不再硬编码单一模型。
+from core.agent_card import AgentCardRegistry
+
+# ☀️ 12 宝石黄道内阁车座
 VAULT_ZODIAC_CABINETS = {
-    "ruby": {
-        "en_key": "ruby",
-        "base_stone": "💎 红宝石 (Ruby)",
-        "zodiac_sign": "♌ 狮子座 · 首席掌盘",
-        "avatars": {
-            "court": "🏛️ 审判长 · 红宝石尊者",
-            "honglou": "📿 通灵宝玉 · 贾宝玉",
-            "fengyue": "🍶 红宝尊人 · 潇洒仙客"
-        },
-        "node": "nuc",
-        "model": "nova-deepseek-v4-flash-aggr",
-        "team": "judge"
-    },
-    "topaz": {
-        "en_key": "topaz",
-        "base_stone": "💎 黄玉 (Topaz)",
-        "zodiac_sign": "♏ 天蝎座 · 执法锐锋",
-        "avatars": {
-            "court": "⚖️ 首席公诉人 · 黄玉检察官",
-            "honglou": "📜 贾雨村 · 宪台大人",
-            "fengyue": "黄玉御史 · 严格理法"
-        },
-        "node": "raccoon",
-        "model": "topaz-deepseek-v4-flash",
-        "team": "prosecutor"
-    },
-    "amber": {
-        "en_key": "amber",
-        "base_stone": "💎 琥珀 (Amber)",
-        "zodiac_sign": "♊ 双子座 · 时代记忆",
-        "avatars": {
-            "court": "📜 庭审书记员 · 琥珀纪要员",
-            "honglou": "📜 袭人 · 贤德闺秀",
-            "fengyue": "琥珀书生 · 记事名士"
-        },
-        "node": "ash2",
-        "model": "azure-deepseek-v4-flash",
-        "team": "court"
-    },
-    "emerald": {
-        "en_key": "emerald",
-        "base_stone": "💎 祖母绿 (Emerald)",
-        "zodiac_sign": "♉ 金牛座 · 资产审计",
-        "avatars": {
-            "court": "📊 资产评估员 · 祖母绿审计师",
-            "honglou": "🧮 薛纨 · 衡芜主母",
-            "fengyue": "翡翠商客 · 账目精明"
-        },
-        "node": "mbp",
-        "model": "azure-deepseek-v4-flash",
-        "team": "court"
-    },
-    "azure": {
-        "en_key": "azure",
-        "base_stone": "💎 天蓝石 (Azure)",
-        "zodiac_sign": "♒ 水瓶座 · 程序正义",
-        "avatars": {
-            "court": "🏛️ 审判员 B · 天蓝法官",
-            "honglou": "🌿 惜春 · 藕香庵主",
-            "fengyue": "天蓝道人 · 澄澈严明"
-        },
-        "node": "ch1",
-        "model": "azure-deepseek-v4-flash",
-        "team": "judge"
-    },
-    "diamond": {
-        "en_key": "diamond",
-        "base_stone": "💎 金刚石 (Diamond)",
-        "zodiac_sign": "♎ 天秤座 · 铁壁辩护",
-        "avatars": {
-            "court": "🛡️ 首席辩护律师 · 金刚大律师",
-            "honglou": "🌸 林黛玉 · 绛珠仙草",
-            "fengyue": "金刚绝调 · 独孤名士"
-        },
-        "node": "pve",
-        "model": "diamond-deepseek-v4-flash",
-        "team": "defense"
-    },
-    "obsidian": {
-        "en_key": "obsidian",
-        "base_stone": "💎 黑曜石 (Obsidian)",
-        "zodiac_sign": "♏ 天蝎座 · 铁面监察",
-        "avatars": {
-            "court": "⚖️ 监察特派员 · 黑曜石法务",
-            "honglou": "🗡️ 焦大 · 铁血监察",
-            "fengyue": "玄石判官 · 严丝合缝"
-        },
-        "node": "pve2",
-        "model": "azure-deepseek-v4-flash",
-        "team": "prosecutor"
-    },
-    "jasper": {
-        "en_key": "jasper",
-        "base_stone": "💎 碧石 (Jasper)",
-        "zodiac_sign": "♍ 处女座 · 谦抑合规",
-        "avatars": {
-            "court": "🛡️ 资深合规官 · 碧石大律师",
-            "honglou": "🦚 薛宝钗 · 蘅芜君",
-            "fengyue": "碧石公子 · 谦谦君子"
-        },
-        "node": "vault (规划LXC)",
-        "model": "azure-deepseek-v4-flash",
-        "team": "defense"
-    },
-    "carbonado": {
-        "en_key": "carbonado",
-        "base_stone": "💎 黑金刚石 (Carbonado)",
-        "zodiac_sign": "♈ 白羊座 · 锐意公诉",
-        "avatars": {
-            "court": "⚖️ 助理公诉人 · 铁金刚官",
-            "honglou": "⚔️ 贾探春 · 敏探春",
-            "fengyue": "黑面铁判 · 刚正不阿"
-        },
-        "node": "pve2",
-        "model": "carbonado-deepseek-v4-flash",
-        "team": "prosecutor"
-    },
-    "argentite": {
-        "en_key": "argentite",
-        "base_stone": "💎 辉银矿 (Argentite)",
-        "zodiac_sign": "♒ 水瓶座 · 法理断断",
-        "avatars": {
-            "court": "🛡️ 辩护助理 · 辉银法理员",
-            "honglou": "📜 史湘云 · 枕霞旧友",
-            "fengyue": "辉银月仙 · 奇才雅士"
-        },
-        "node": "pve3",
-        "model": "argentite-deepseek-v4-flash",
-        "team": "defense"
-    },
-    "agate": {
-        "en_key": "agate",
-        "base_stone": "💎 玛瑙 (Agate)",
-        "zodiac_sign": "♊ 双子座 · 时代纪要",
-        "avatars": {
-            "court": "🛡️ 辩护助理 · 玛瑙史纪员",
-            "honglou": "📜 贾迎春 · 木菱洲主",
-            "fengyue": "玛瑙散人 · 博古浪客"
-        },
-        "node": "xgp",
-        "model": "agate-deepseek-v4-flash",
-        "team": "defense"
-    },
-    "quartz": {
-        "en_key": "quartz",
-        "base_stone": "💎 石英 (Quartz)",
-        "zodiac_sign": "♐ 射手座 · 规则澄澈",
-        "avatars": {
-            "court": "⚖️ 助理公诉人 · 石英律政",
-            "honglou": "📐 晴雯 · 勇晴雯",
-            "fengyue": "水晶高客 · 规则透明"
-        },
-        "node": "pbs3",
-        "model": "quartz-deepseek-v4-flash",
-        "team": "prosecutor"
-    }
+    card.key: card.to_seat_dict()
+    for card in AgentCardRegistry.list_cabinet()
 }
 
-# 审判员 Luna & 被告人 Leopard
-LUNA_JUDGE = {
-    "en_key": "luna",
-    "base_stone": "💎 月华石 (Luna)",
-    "zodiac_sign": "♋ 巨蟹座 · 常情审视",
-    "avatars": {
-        "court": "🏛️ 审判员 A · 月华法官",
-        "honglou": "🍵 妙玉 · 槛外人",
-        "fengyue": "月华仙子 · 洞察常情"
-    },
-    "node": "onecloud2",
-    "model": "azure-deepseek-v4-flash"
-}
+# 审判员 Luna & 被告人 Leopard (特别车座)
+LUNA_JUDGE = AgentCardRegistry.get("luna").to_seat_dict()
+DEFENDANT_SEAT = AgentCardRegistry.get("leopard").to_seat_dict()
 
-DEFENDANT_SEAT = {
-    "en_key": "leopard",
-    "base_stone": "💎 豹纹石 (Leopard)",
-    "zodiac_sign": "♑ 摩羯座 · 坚韧承重",
-    "avatars": {
-        "court": "👤 被告人 · 尊长",
-        "honglou": "👴 贾政 · 存周先生",
-        "fengyue": "松风老客 · 豹纹闲人"
-    },
-    "node": "suse",
-    "model": "azure-deepseek-v4-flash"
-}
-
-# 🌸 昴宿七姐妹星团 (Violet 规划落宫至 warden LXC 担当 Manager)
+# 🌸 昴宿七姐妹星团车座
 FLOWER_PLEIADES_TABLE = {
-    "meigui": {
-        "en_key": "meigui",
-        "base_flower": "🌸 玫瑰",
-        "pleiades_trait": "✨ 昴宿一 (Maia) · 连绵对韵 [平平]",
-        "avatars": {"court": "🌸 程序合议员 · 玫瑰仙子", "honglou": "🌹 玫瑰花神", "fengyue": "玫瑰绝色"},
-        "node": "ash1",
-        "team": "flower",
-        "model": "azure-deepseek-v4-flash",
-        "instruction": "你是昴宿一【玫瑰】。针对庭审发表程序合议评议：复核阜阳留置与最高法指定管辖程序，重点评议《刑法》第12条从旧兼从轻对2016年4月新规的阻断效力！"
-    },
-    "qiangwei": {
-        "en_key": "qiangwei",
-        "base_flower": "🌸 蔷薇",
-        "pleiades_trait": "✨ 昴宿二 (Electra) · 连绵对韵 [平平]",
-        "avatars": {"court": "🌸 实体证据合议员 · 蔷薇仙子", "honglou": "🌹 蔷薇花神", "fengyue": "蔷薇芳客"},
-        "node": "ash2",
-        "team": "flower",
-        "model": "azure-deepseek-v4-flash",
-        "instruction": "你是昴宿二【蔷薇】。针对庭审发表实体证据合议评议：复核1000万10次平价还本水单，确认中煤账目零亏空，认定四大罪名完全不成立！"
-    },
-    "tumi": {
-        "en_key": "tumi",
-        "base_flower": "🌸 荼蘼",
-        "pleiades_trait": "✨ 昴宿三 (Taygeta) · 连绵对韵 [平平]",
-        "avatars": {"court": "🌸 常理社会合议员 · 荼蘼仙子", "honglou": "🥀 荼蘼花神", "fengyue": "荼蘼浪子"},
-        "node": "ash3",
-        "team": "flower",
-        "model": "azure-deepseek-v4-flash",
-        "instruction": "你是昴宿三【荼蘼】。针对庭审发表社会常情合议评议：还原2015-2016山河四省最冷冬天的真实背景，认定尊长救助亲家属于无罪义举！"
-    },
-    "zhuyu": {
-        "en_key": "zhuyu",
-        "base_flower": "🌸 茱萸",
-        "pleiades_trait": "✨ 昴宿四 (Alcyone) · 连绵对韵 [平平]",
-        "avatars": {"court": "🌸 谦抑法理合议员 · 茱萸仙子", "honglou": "🌿 茱萸香客", "fengyue": "茱萸高客"},
-        "node": "onecloud1",
-        "team": "flower",
-        "model": "azure-deepseek-v4-flash",
-        "instruction": "你是昴宿四【茱萸】。针对庭审发表刑法谦抑性评议：强调无财物收受与权钱交易对价时，不得以道德或拟制罪名构陷无辜！"
-    },
-    "moli": {
-        "en_key": "moli",
-        "base_flower": "🌸 茉莉",
-        "pleiades_trait": "✨ 昴宿五 (Celaeno) · 连绵对韵 [去去]",
-        "avatars": {"court": "🌸 证据闭环合议员 · 茉莉仙子", "honglou": "🌼 茉莉花神", "fengyue": "茉莉仙姬"},
-        "node": "suse2",
-        "team": "flower",
-        "model": "azure-deepseek-v4-flash",
-        "instruction": "你是昴宿五【茉莉】。针对庭审发表证据闭环评议：强调书证效力优先于监委口供，1000万平进平出证明主观非法占有目的为零！"
-    },
-    "muxu": {
-        "en_key": "muxu",
-        "base_flower": "🌸 苜蓿",
-        "pleiades_trait": "✨ 昴宿六 (Sterope) · 连绵对韵 [去去]",
-        "avatars": {"court": "🌸 裁决复核合议员 · 苜蓿仙子", "honglou": "🌱 苜蓿草仙", "fengyue": "苜蓿逸客"},
-        "node": "xgp2",
-        "team": "flower",
-        "model": "azure-deepseek-v4-flash",
-        "instruction": "你是昴宿六【苜蓿】。针对庭审发表合议裁决评议：复核全体连绵小花组成员意见，确认控方起诉证据链断裂！"
-    },
-    "violet": {
-        "en_key": "violet",
-        "base_flower": "🌸 紫罗兰 (紫玉 · Flower Manager)",
-        "pleiades_trait": "👑 昴宿七 (Merope) · 小花组掌门/主理",
-        "avatars": {"court": "👑 评审团团长兼主理 · 紫罗兰仙子", "honglou": "🪻 紫罗掌门仙女", "fengyue": "紫罗兰主理"},
-        "node": "warden (规划LXC)",
-        "team": "flower",
-        "model": "azure-deepseek-v4-flash",
-        "instruction": "你是昴宿七兼小花组掌门【紫罗兰】。作为 Flower Team Manager，代表全连绵小花组向审判长红宝石提交《无罪合议意见书》，建议依法宣告尊长无罪！"
-    }
+    card.key: card.to_seat_dict()
+    for card in AgentCardRegistry.list_flowers()
 }
+
+# 补充合议指令 (场景化指令)
+_FLOWER_INSTRUCTIONS = {
+    "meigui": "你是昴宿一【玫瑰】。针对庭审发表程序合议评议：复核阜阳留置与最高法指定管辖程序，重点评议《刑法》第12条从旧兼从轻对2016年4月新规的阻断效力！",
+    "qiangwei": "你是昴宿二【蔷薇】。针对庭审发表实体证据合议评议：复核1000万10次平价还本水单，确认中煤账目零亏空，认定四大罪名完全不成立！",
+    "tumi": "你是昴宿三【荼蘼】。针对庭审发表社会常情合议评议：还原2015-2016山河四省最冷冬天的真实背景，认定尊长救助亲家属于无罪义举！",
+    "zhuyu": "你是昴宿四【茱萸】。针对庭审发表刑法谦抑性评议：强调无财物收受与权钱交易对价时，不得以道德或拟制罪名构陷无辜！",
+    "moli": "你是昴宿五【茉莉】。针对庭审发表证据闭环评议：强调书证效力优先于监委口供，1000万平进平出证明主观非法占有目的为零！",
+    "muxu": "你是昴宿六【苜蓿】。针对庭审发表合议裁决评议：复核全体连绵小花组成员意见，确认控方起诉证据链断裂！",
+    "violet": "你是昴宿七兼小花组掌门【紫罗兰】。作为 Flower Team Manager，代表全连绵小花组向审判长红宝石提交《无罪合议意见书》，建议依法宣告尊长无罪！",
+}
+for k, inst in _FLOWER_INSTRUCTIONS.items():
+    if k in FLOWER_PLEIADES_TABLE:
+        FLOWER_PLEIADES_TABLE[k]["instruction"] = inst
+
 
 def render_custom_css():
     st.markdown("""
@@ -822,16 +600,21 @@ with mid_col:
         st.markdown("### 📊 席位实时状态（ticker）")
         render_speaker_ticker()
         st.divider()
-        st.markdown("### ☀️ Vault 12 黄道内阁 (Acting Agents)")
+        st.markdown("### ☀️ Vault 12 黄道内阁 · Agent Card 智能车座")
         for k, v in VAULT_ZODIAC_CABINETS.items():
             avatar = v["avatars"].get(selected_scenario_key, v["avatars"]["court"])
-            st.caption(f"• **{v['base_stone']}**: **{avatar}** (`{v['node']}`)")
+            soul = f" ({v['soul_name']})" if v.get("soul_name") else ""
+            matrix = f" | `{v['matrix_id']}`" if v.get("matrix_id") else ""
+            st.caption(f"• **{v['base_stone']}**{soul}: **{avatar}** (`{v['node']}`{matrix})")
         
         st.divider()
-        st.markdown("### 🌸 昴宿七姐妹星团 (Flower Team)")
+        st.markdown("### 🌸 昴宿七姐妹星团 · 智能车座")
         for k, v in FLOWER_PLEIADES_TABLE.items():
             avatar = v["avatars"].get(selected_scenario_key, v["avatars"]["court"])
-            st.caption(f"• **{v['base_flower']}**: **{avatar}** (`{v['node']}`)")
+            soul = f" ({v['soul_name']})" if v.get("soul_name") else ""
+            matrix = f" | `{v['matrix_id']}`" if v.get("matrix_id") else ""
+            st.caption(f"• **{v['base_stone']}**{soul}: **{avatar}** (`{v['node']}`{matrix})")
+
 
         st.divider()
         if st.button("💾 保存庭审实录 (本地 + MinIO + lake1)", use_container_width=True):
