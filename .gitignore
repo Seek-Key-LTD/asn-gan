@@ -14,3 +14,5 @@ dossiers/*/metrics/
 
 # Cloudflare Wrangler CLI 本地缓存（含账号信息，禁止 commit）
 .wrangler/
+data/
+*.db
