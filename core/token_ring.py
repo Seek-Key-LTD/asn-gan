@@ -164,29 +164,40 @@ class RobertTokenRingEngine:
         ok = False
         status_msg = ""
 
-        try:
-            resp = requests.post(endpoint, json=payload, headers=headers, timeout=35)
-            if resp.status_code == 200:
-                try:
-                    res_json = resp.json()
-                    res_obj = res_json.get("result", {}) or {}
-                    if isinstance(res_obj, dict) and "message" in res_obj:
-                        msg_obj = res_obj["message"] or {}
-                        parts = msg_obj.get("parts", [])
-                        text_list = [p.get("text", "") for p in parts if isinstance(p, dict) and "text" in p]
-                        content = "\n".join(filter(None, text_list)).strip()
-                    if not content:
-                        content = res_obj.get("reply", "") or res_json.get("reply", "") or ""
-                    if content:
-                        ok = True
-                except Exception:
-                    content = resp.text.strip()
-                    if content:
-                        ok = True
-            else:
-                status_msg = f"HTTP {resp.status_code}"
-        except requests.exceptions.RequestException as e:
-            status_msg = f"网络连接重试 ({e.__class__.__name__})"
+        for attempt in range(2):
+            try:
+                resp = requests.post(endpoint, json=payload, headers=headers, timeout=35)
+                if resp.status_code == 200:
+                    try:
+                        res_json = resp.json()
+                        if "error" in res_json:
+                            err_info = res_json["error"]
+                            status_msg = f"RPC Error: {err_info.get('message', err_info)}"
+                        else:
+                            res_obj = res_json.get("result", {}) or {}
+                            if isinstance(res_obj, dict) and "message" in res_obj:
+                                msg_obj = res_obj["message"] or {}
+                                parts = msg_obj.get("parts", [])
+                                text_list = [p.get("text", "") for p in parts if isinstance(p, dict) and "text" in p]
+                                content = "\n".join(filter(None, text_list)).strip()
+                            if not content:
+                                content = res_obj.get("reply", "") or res_json.get("reply", "") or ""
+                            if content:
+                                ok = True
+                                break
+                    except Exception as json_err:
+                        content = resp.text.strip()
+                        if content:
+                            ok = True
+                            break
+                        status_msg = f"Parse Error: {json_err}"
+                else:
+                    status_msg = f"HTTP {resp.status_code}"
+            except requests.exceptions.RequestException as e:
+                status_msg = f"网络超时重试 ({e.__class__.__name__})"
+
+            if not ok and attempt == 0:
+                time.sleep(1.5)
 
         duration = round(time.time() - t0, 2)
 
