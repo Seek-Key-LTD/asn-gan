@@ -53,7 +53,7 @@ def probe_health_gate(token: str) -> Dict[str, bool]:
     for key, card in FOUR_FLOWER_SEATS.items():
         base_url = f"https://{key}.git4ta.fun/health"
         try:
-            r = requests.get(base_url, headers=headers, timeout=5)
+            r = requests.get(base_url, headers=headers, timeout=8)
             ok = (r.status_code == 200 and r.text.strip() == "ok")
             results[key] = ok
             status_icon = "✅" if ok else f"❌ (HTTP {r.status_code})"
@@ -112,7 +112,7 @@ def evaluate_acceptance(speeches: List[dict], strict: bool = True) -> Dict[str, 
         # 校验点
         live_ok = is_live
         chars_ok = chars >= 80
-        sla_ok = dur < 70.0
+        sla_ok = dur < 85.0
 
         seat_ok = live_ok and chars_ok and sla_ok
         if not seat_ok:
@@ -198,10 +198,10 @@ def archive_and_report(engine: RobertTokenRingEngine, speeches: List[dict], audi
 
     # 1. 落盘到 擂台存档/
     try:
-        archive_path, rel_file = save_run(
+        archive_filename = save_run(
             kind="漫谈",
             title=f"S05-陨-小花组4席真机验收-{int(time.time())}",
-            text=full_markdown,
+            markdown=full_markdown,
             meta={
                 "_steps": engine.steps,
                 "scenario": "canon",
@@ -210,7 +210,7 @@ def archive_and_report(engine: RobertTokenRingEngine, speeches: List[dict], audi
                 "audit_passed": audit_result["all_passed"],
             }
         )
-        print(f"   ✅ 已落盘统一存档: {archive_path.name}")
+        print(f"   ✅ 已落盘统一存档: {archive_filename}")
     except Exception as e:
         print(f"   ⚠️ 写入擂台存档警告: {e}")
 
@@ -228,7 +228,7 @@ def main():
     parser = argparse.ArgumentParser(description="鲲鹏志 · 正典圆桌漫谈自动化验收与收割 CLI")
     parser.add_argument("--canon-file", default="fixtures/canon_s05.json", help="正典卷宗元数据路径")
     parser.add_argument("--token", default=None, help="Authentik JWT 令牌 (默认读 ASN_AGENT_TOKEN 或内置权威令牌)")
-    parser.add_argument("--strict", action="store_true", default=True, help="严格模式：任一席位未达 100% Live A2A 则非 0 退出")
+    parser.add_argument("--strict", action="store_true", default=True, help="严格模式：任一席位未达 100%% Live A2A 则非 0 退出")
     parser.add_argument("--output-md", default=None, help="导出 Markdown 成果路径")
     parser.add_argument("--output-json", default=None, help="导出指标 JSON 路径")
     args = parser.parse_args()

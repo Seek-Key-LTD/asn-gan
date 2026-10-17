@@ -166,7 +166,7 @@ class RobertTokenRingEngine:
 
         for attempt in range(2):
             try:
-                resp = requests.post(endpoint, json=payload, headers=headers, timeout=35)
+                resp = requests.post(endpoint, json=payload, headers=headers, timeout=55)
                 if resp.status_code == 200:
                     try:
                         res_json = resp.json()
