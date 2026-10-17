@@ -26,8 +26,9 @@ class RobertTokenRingEngine:
         self.scenario = scenario
         self.token_holder = "ruby"          # 令牌初始在审判长（红宝石）手中
         self.shared_context = []            # 共享法庭笔录上下文 (Shared Memory)
-        self.steps = []                     # 过程元数据：每步耗时/模型/上下文注入清单
-        self._model = os.getenv("DEBATE_MODEL", "tencent/hy3:free")
+        self.steps = []                     # 过程元数据：每步耗时/K-Agent席位/上下文注入清单
+        # DEBATE_MODEL 已全面注释废弃：席位直接调度各物理小机的 K-Agent (Key-Agent) 实体
+        # self._model = os.getenv("DEBATE_MODEL", "tencent/hy3:free")
 
     # ---- 共享上下文 ----
     def add_to_shared_context(self, avatar, content, team=""):
@@ -87,7 +88,7 @@ class RobertTokenRingEngine:
         """按令牌环发言：持令牌者基于定向接话上下文 + 极昼全量记忆发言"""
         avatars = seat_info.get("avatars", {})
         header = avatars.get(self.scenario, avatars.get("court", seat_info.get("en_key", "席位")))
-        model = seat_info.get("model") or self._model
+        k_agent = seat_info.get("k_agent_target") or f"k-agent-{en_key}@{seat_info.get('node', 'fleet')}"
         team = seat_info.get("team", "")
         en_key = seat_info.get("en_key", "")
 
@@ -100,7 +101,7 @@ class RobertTokenRingEngine:
         )
 
         prompt = (
-            f"你是模拟法庭角色：【{header}】。\n"
+            f"你是模拟法庭角色：【{header}】（实体：{k_agent}）。\n"
             f"你当前持有【法庭发言令牌 Token】！令牌现在在你手中，你必须发言。\n"
             f"{doc_mem}\n"
             f"【定向接话上下文 (Shared Memory)】:\n{ctx_str}\n"
@@ -110,21 +111,23 @@ class RobertTokenRingEngine:
         start_ts = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         t0 = time.time()
         try:
+            # 席位直连 K-Agent 网关或通过协议调度物理节点 Agent
             resp = self.client.chat.completions.create(
-                model=model,
+                model=k_agent,
                 messages=[{"role": "user", "content": prompt}],
                 timeout=60,
             )
             content = resp.choices[0].message.content.strip()
             ok = True
         except Exception as e:
-            content = f"（{header} 引擎调用失败: {e}）"
+            content = f"（{header} 连线超时或调度异常: {e}）"
             ok = False
         self.steps.append({
             "seat": en_key,
             "header": header,
             "team": team,
-            "model": model,
+            "k_agent": k_agent,
+            "node": seat_info.get("node", "fleet"),
             "start_ts": start_ts,
             "duration_sec": round(time.time() - t0, 2),
             "chars": len(content),

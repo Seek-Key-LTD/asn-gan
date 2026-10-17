@@ -16,20 +16,24 @@ import openai
 
 from core.agent_card import AgentCardRegistry
 
-OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "https://litellm.git4ta.fun/v1")
-_DEFAULT_ENGINE = os.getenv("DEBATE_MODEL", "tencent/hy3:free")
+OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "https://litellm.capitaltrain.cn/v1")
+# DEBATE_MODEL 已全面注释废弃：席位直接调度各物理小机的 K-Agent (Key-Agent) 实体
+# _DEFAULT_ENGINE = os.getenv("DEBATE_MODEL", "tencent/hy3:free")
 
 
 def _build_court_seat(agent_key: str, role: str, team: str) -> dict:
     card = AgentCardRegistry.get(agent_key)
+    node = card.node if card else "fleet"
+    k_agent = card.k_agent_target if card else f"k-agent-{agent_key}@{node}"
     return {
         "role": role,
         "agent": agent_key,
         "display_name": card.display_name if card else agent_key,
         "soul_name": card.soul_name if card else "",
-        "node": card.node if card else "fleet",
+        "node": node,
         "matrix_id": card.matrix_id if card else "",
-        "model": card.active_engine if card else _DEFAULT_ENGINE,
+        # "model": card.active_engine if card else _DEFAULT_ENGINE, # 已全面废弃注释
+        "k_agent": k_agent,
         "team": team,
         "agent_card": card,
     }
@@ -144,8 +148,10 @@ class RobertTokenRingEngine:
             "起诉书立场必须坚定有据，不得自我软化，为后续法庭交锋提供弹药。"
         )
         try:
+            prosecutor_seat = SEATS_DICT["prosecutor_chief"]
+            k_agent = prosecutor_seat.get("k_agent", "k-agent-topaz@raccoon")
             resp = self.client.chat.completions.create(
-                model=SEATS_DICT["prosecutor_chief"]["model"],
+                model=k_agent,
                 messages=[{"role": "user", "content": prompt}],
                 timeout=55
             )
@@ -156,6 +162,7 @@ class RobertTokenRingEngine:
     def execute_token_speech(self, seat_key, specific_instruction):
         seat = SEATS_DICT[seat_key]
         header = f"{seat['role']} ({seat['agent']} @ {seat['node']})"
+        k_agent = seat.get("k_agent", f"k-agent-{seat['agent']}@{seat['node']}")
 
         blocks = self._build_context_blocks(seat_key)
         ctx_str = "\n\n".join(f"【{label}】:\n{content}" for label, content in blocks) or "(刚开场)"
@@ -163,7 +170,7 @@ class RobertTokenRingEngine:
         doc_mem = f"\n【《极昼.md》案卷记忆】:\n{self.article_text[:18000]}\n" if self.article_text else ""
 
         prompt_user = (
-            f"你是模拟法庭角色：【{header}】。\n"
+            f"你是模拟法庭角色：【{header}】（实体：{k_agent}）。\n"
             f"你当前持有【法庭发言令牌 Token】！\n"
             f"{doc_mem}\n"
             f"【定向接话上下文 (Shared Memory)】:\n{ctx_str}\n"
@@ -188,7 +195,7 @@ class RobertTokenRingEngine:
         t0 = time.time()
         try:
             resp = self.client.chat.completions.create(
-                model=seat["model"],
+                model=k_agent,
                 messages=[
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": prompt_user}
@@ -198,14 +205,15 @@ class RobertTokenRingEngine:
             content = resp.choices[0].message.content.strip()
             ok = True
         except Exception as e:
-            content = f"（{header} 连线超时: {e}）"
+            content = f"（{header} 连线超时或调度异常: {e}）"
             ok = False
 
         self.steps.append({
             "seat": seat_key,
             "header": header,
             "team": seat.get("team", ""),
-            "model": seat["model"],
+            "k_agent": k_agent,
+            "node": seat.get("node", "fleet"),
             "start_ts": start_ts,
             "duration_sec": round(time.time() - t0, 2),
             "chars": len(content),
@@ -219,6 +227,7 @@ class RobertTokenRingEngine:
         """庭前会议圆桌协商执行器：无令牌、无法槌、无客套，直接谈逻辑。"""
         seat = SEATS_DICT[seat_key]
         header = f"{seat['role']} ({seat['agent']} @ {seat['node']})"
+        k_agent = seat.get("k_agent", f"k-agent-{seat['agent']}@{seat['node']}")
 
         blocks = self._build_context_blocks(seat_key)
         ctx_str = "\n\n".join(f"【{label}】:\n{content}" for label, content in blocks) or "(庭前会议开场)"
@@ -226,7 +235,7 @@ class RobertTokenRingEngine:
         doc_mem = f"\n【《极昼.md》案卷记忆】:\n{self.article_text[:18000]}\n" if self.article_text else ""
 
         prompt_user = (
-            f"你是模拟法庭庭前会议参与者：【{header}】。\n"
+            f"你是模拟法庭庭前会议参与者：【{header}】（实体：{k_agent}）。\n"
             f"{doc_mem}\n"
             f"【会议上下文 (Shared Memory)】:\n{ctx_str}\n"
             f"你的会议任务：{specific_instruction}\n\n"
@@ -247,7 +256,7 @@ class RobertTokenRingEngine:
         t0 = time.time()
         try:
             resp = self.client.chat.completions.create(
-                model=seat["model"],
+                model=k_agent,
                 messages=[
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": prompt_user}
@@ -257,14 +266,15 @@ class RobertTokenRingEngine:
             content = resp.choices[0].message.content.strip()
             ok = True
         except Exception as e:
-            content = f"（{header} 连线超时: {e}）"
+            content = f"（{header} 连线超时或调度异常: {e}）"
             ok = False
 
         self.steps.append({
             "seat": seat_key,
             "header": header,
             "team": seat.get("team", ""),
-            "model": seat["model"],
+            "k_agent": k_agent,
+            "node": seat.get("node", "fleet"),
             "start_ts": start_ts,
             "duration_sec": round(time.time() - t0, 2),
             "chars": len(content),

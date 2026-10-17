@@ -605,15 +605,15 @@ with mid_col:
             avatar = v["avatars"].get(selected_scenario_key, v["avatars"]["court"])
             soul = f" ({v['soul_name']})" if v.get("soul_name") else ""
             matrix = f" | `{v['matrix_id']}`" if v.get("matrix_id") else ""
-            st.caption(f"• **{v['base_stone']}**{soul}: **{avatar}** (`{v['node']}`{matrix})")
+            st.caption(f"• **{v['base_stone']}**{soul}: **{avatar}** (`k-agent-{k}@{v['node']}`{matrix})")
         
         st.divider()
-        st.markdown("### 🌸 昴宿七姐妹星团 · 智能车座")
+        st.markdown("### 🌸 昴宿七姐妹星团 · K-Agent 车座")
         for k, v in FLOWER_PLEIADES_TABLE.items():
             avatar = v["avatars"].get(selected_scenario_key, v["avatars"]["court"])
             soul = f" ({v['soul_name']})" if v.get("soul_name") else ""
             matrix = f" | `{v['matrix_id']}`" if v.get("matrix_id") else ""
-            st.caption(f"• **{v['base_stone']}**{soul}: **{avatar}** (`{v['node']}`{matrix})")
+            st.caption(f"• **{v['base_stone']}**{soul}: **{avatar}** (`k-agent-{k}@{v['node']}`{matrix})")
 
 
         st.divider()

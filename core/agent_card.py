@@ -29,7 +29,8 @@ class AgentCard:
     role_description: str = ""                  # 角色描述 / 职责
     a2a_endpoint: str = ""                      # A2A 东西向协议入口
     evm_address: str = ""                       # 智能体链上钱包地址
-    engine_chassis: str = ""                    # 底层发动机 (若留空则由集群网关 DEBATE_MODEL 统一定义)
+    # engine_chassis: str = ""                    # 已废弃注释：席位不绑定中心化大模型
+    # DEBATE_MODEL 已全面注释废弃：席位即车座，直连各小机部署的 K-Agent (Key-Agent) 实体
 
     def get_avatar(self, scenario: str = "court") -> str:
         """获取当前场景下的化身头衔"""
@@ -40,18 +41,33 @@ class AgentCard:
         return f"{self.display_name} ({self.soul_name or self.key})"
 
     @property
-    def badge(self) -> str:
-        """格式化席位铭牌徽章"""
-        soul = f" · {self.soul_name}" if self.soul_name else ""
-        return f"{self.display_name}{soul} @ {self.node}"
+    def k_agent_target(self) -> str:
+        """K-Agent 物理实体目标 (如 k-agent-ruby@nuc)"""
+        return f"k-agent-{self.key}@{self.node}"
 
     @property
-    def active_engine(self) -> str:
-        """获取当前承载的底层发动机 (模型)"""
-        return self.engine_chassis or os.getenv("DEBATE_MODEL", "tencent/hy3:free")
+    def k_agent_id(self) -> str:
+        """K-Agent 唯一标识 (如 ruby)"""
+        return f"k-agent-{self.key}"
+
+    @property
+    def k_agent_endpoint(self) -> str:
+        """K-Agent A2A/RPC 通信端点"""
+        return self.a2a_endpoint or f"http://{self.node}.node.consul:18790/a2a"
+
+    @property
+    def badge(self) -> str:
+        """格式化席位铭牌徽章 (展示 K-Agent 智能车座底座)"""
+        soul = f" · {self.soul_name}" if self.soul_name else ""
+        return f"{self.display_name}{soul} (k-agent-{self.key}@{self.node})"
+
+    # @property
+    # def active_engine(self) -> str:
+    #     """已废弃注释：原中心化发动机，现全面被 K-Agent 取代"""
+    #     return os.getenv("DEBATE_MODEL", "tencent/hy3:free")
 
     def to_seat_dict(self) -> dict:
-        """转换为向下兼容的 seat_info 字典结构"""
+        """转换为向下兼容的 seat_info 字典结构（以 K-Agent 智能车座为核心实体）"""
         return {
             "en_key": self.key,
             "display_name": self.display_name,
@@ -62,7 +78,11 @@ class AgentCard:
             "node": self.node,
             "team": self.team,
             "matrix_id": self.matrix_id,
-            "model": self.active_engine,
+            "k_agent": self.k_agent_target,
+            "k_agent_target": self.k_agent_target,
+            "k_agent_id": self.k_agent_id,
+            "k_agent_endpoint": self.k_agent_endpoint,
+            # "model": self.active_engine, # 已废弃注释：席位直接调度各小机 K-Agent
             "agent_card": self,
         }
 

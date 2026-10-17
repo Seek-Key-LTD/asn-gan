@@ -38,7 +38,9 @@ log = logging.getLogger("batch")
 # ─── 配置 ─────────────────────────────────────────
 OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "http://localhost:4000/v1")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "sk-47318")
-DEBATE_MODEL = os.getenv("DEBATE_MODEL", "gemini-2.5-flash")
+# DEBATE_MODEL 已全面废弃注释：席位直接调度各物理小机的 K-Agent (Key-Agent) 实体
+# DEBATE_MODEL = os.getenv("DEBATE_MODEL", "gemini-2.5-flash")
+DEBATE_MODEL = "k-agent"
 CLOUDFLARE_ACCOUNT_ID = os.getenv("CLOUDFLARE_ACCOUNT_ID", "")
 CLOUDFLARE_API_TOKEN = os.getenv("CLOUDFLARE_API_TOKEN", "")
 R2_BUCKET = os.getenv("R2_BUCKET", "kunpengzhi-tts")

@@ -8,7 +8,9 @@ class Config:
     # OpenAI / LLM
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
     OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1")
-    DEBATE_MODEL = os.getenv("DEBATE_MODEL", "gemini-2.5-flash")
+    # DEBATE_MODEL 已废弃注释：席位直接调用各小机部署的 K-Agent (Key-Agent)，不再依赖中心化大模型
+    # DEBATE_MODEL = os.getenv("DEBATE_MODEL", "gemini-2.5-flash")
+
 
     # Wiki.js
     WIKI_JS_URL = os.getenv("WIKI_JS_URL", "https://wiki.seekkey.eu.org/graphql")
