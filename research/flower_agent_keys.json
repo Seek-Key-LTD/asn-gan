@@ -1,0 +1,68 @@
+{
+  "moli": {
+    "agent": "moli",
+    "node": "ch1",
+    "badge": "🌸 茉莉仙子 (秋香)",
+    "key_alias": "k-agent-moli",
+    "key": "sk-eofsLeVm_xnoTMEHB9N6Cg",
+    "token_id": "b880a822841f88f5cd8205ea1d816ec3842a9c55348eb0a83bf073517add75dc",
+    "model": "sensenova-6.8-flash-lite",
+    "test_latency_s": 9.35,
+    "verified": true
+  },
+  "muxu": {
+    "agent": "muxu",
+    "node": "ch2",
+    "badge": "🌿 苜蓿仙子 (碧涛)",
+    "key_alias": "k-agent-muxu",
+    "key": "sk-2UEWqu_k1rm7VA5hK-IB7A",
+    "token_id": "f8ecb976ad96f07c5baacab3d4f2eb8012719ed6fba777536abb4235cb5186dc",
+    "model": "sensenova-6.8-flash-lite",
+    "test_latency_s": 12.18,
+    "verified": true
+  },
+  "tumi": {
+    "agent": "tumi",
+    "node": "ash1",
+    "badge": "🥀 荼蘼仙子 (青黛)",
+    "key_alias": "k-agent-tumi",
+    "key": "sk-yv0v-mXINWkR20nOq3yEDw",
+    "token_id": "59b886255b5943581df975d03745e3d5bbff2094b13189d2f47ed877966d1415",
+    "model": "sensenova-6.8-flash-lite",
+    "test_latency_s": 21.38,
+    "verified": true
+  },
+  "zhuyu": {
+    "agent": "zhuyu",
+    "node": "ash2",
+    "badge": "🍃 茱萸仙子 (霁月)",
+    "key_alias": "k-agent-zhuyu",
+    "key": "sk-hH9-gkIMvCpqT1lgV38iuw",
+    "token_id": "7a440130847b8054cad7146299a5ccf75e7fc7ed238b6b201fc1abb555969f5b",
+    "model": "sensenova-6.8-flash-lite",
+    "test_latency_s": 15.56,
+    "verified": true
+  },
+  "meigui": {
+    "agent": "meigui",
+    "node": "onecloud1",
+    "badge": "🌹 玫瑰仙子 (绯云)",
+    "key_alias": "k-agent-meigui",
+    "key": "sk-bxXavB4z0ztsG9BkVuMqBw",
+    "token_id": "9a89a8c9b579bb560fb71915c998db8d2d5b057d74c78e1ebf2a8a6b9690ec5e",
+    "model": "sensenova-6.8-flash-lite",
+    "test_latency_s": 23.12,
+    "verified": true
+  },
+  "qiangwei": {
+    "agent": "qiangwei",
+    "node": "onecloud2",
+    "badge": "🌺 蔷薇仙子 (金波)",
+    "key_alias": "k-agent-qiangwei",
+    "key": "sk-P-qv1RaBF7WfgvhoKf5aUg",
+    "token_id": "e72702a97b829ab227eed04480db726ca440e8c142c57dc6fcabc17d4175f790",
+    "model": "sensenova-6.8-flash-lite",
+    "test_latency_s": 14.6,
+    "verified": true
+  }
+}
