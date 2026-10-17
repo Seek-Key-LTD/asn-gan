@@ -18,8 +18,8 @@ jobs:
 
       - name: Push mirror to GitHub
         run: |
-          set -e
-          git remote add github https://github.com/Seek-Key-LTD/kunpengzhi-ai.git || true
+          git remote add github https://github.com/Seek-Key-LTD/asn-gan.git || true
+          git remote set-url github https://github.com/Seek-Key-LTD/asn-gan.git || true
           git push github refs/remotes/origin/main:refs/heads/main || true
           git push github refs/remotes/origin/dev:refs/heads/dev || true
           echo "✅ Mirror to GitHub done (ash3 → GH)"
