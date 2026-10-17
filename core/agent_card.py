@@ -53,7 +53,7 @@ class AgentCard:
     @property
     def k_agent_endpoint(self) -> str:
         """K-Agent A2A/RPC 通信端点"""
-        return self.a2a_endpoint or f"http://{self.node}.node.consul:18790/a2a"
+        return self.a2a_endpoint or f"https://{self.key}.git4ta.fun/a2a"
 
     @property
     def badge(self) -> str:
@@ -326,8 +326,9 @@ FLEET_AGENT_CARDS: Dict[str, AgentCard] = {
         constellation_house="Pleiades (Electra)",
         matrix_id="@moli:matrix.git4ta.fun",
         team="flower",
-        role_description="清雅洞微 · 茉莉仙子",
-        avatars={"court": "🌸 事实质证员 · 茉莉仙子", "honglou": "💮 茉莉花神", "fengyue": "茉莉清婉"}
+        role_description="事实质证与发问 · 茉莉仙子",
+        a2a_endpoint="https://moli.git4ta.fun/a2a",
+        avatars={"court": "🌸 事实质证 · 茉莉仙子", "flower": "🌸 事实质证 · 茉莉仙子"}
     ),
     "muxu": AgentCard(
         key="muxu",
@@ -337,8 +338,9 @@ FLEET_AGENT_CARDS: Dict[str, AgentCard] = {
         constellation_house="Pleiades (Taygete)",
         matrix_id="@muxu:matrix.git4ta.fun",
         team="flower",
-        role_description="厚德载物 · 苜蓿仙子",
-        avatars={"court": "🌸 证据核准员 · 苜蓿仙子", "honglou": "🌿 苜蓿花神", "fengyue": "苜蓿青润"}
+        role_description="证据链核准与矛盾分析 · 苜蓿仙子",
+        a2a_endpoint="https://muxu.git4ta.fun/a2a",
+        avatars={"court": "🌿 证据核准 · 苜蓿仙子", "flower": "🌿 证据核准 · 苜蓿仙子"}
     ),
     "qiangwei": AgentCard(
         key="qiangwei",
@@ -355,12 +357,13 @@ FLEET_AGENT_CARDS: Dict[str, AgentCard] = {
         key="tumi",
         display_name="荼蘼",
         soul_name="青黛",
-        node="ash3",
+        node="ash1",
         constellation_house="Pleiades (Celaeno)",
         matrix_id="@tumi:matrix.git4ta.fun",
         team="flower",
-        role_description="终局评述 · 荼蘼仙子",
-        avatars={"court": "🌸 闭庭观察员 · 荼蘼仙子", "honglou": "🥀 荼蘼花神", "fengyue": "荼蘼幽冷"}
+        role_description="深层动因剖析与立场辩难 · 荼蘼仙子",
+        a2a_endpoint="https://tumi.git4ta.fun/a2a",
+        avatars={"court": "🥀 动因剖析 · 荼蘼仙子", "flower": "🥀 动因剖析 · 荼蘼仙子"}
     ),
     "violet": AgentCard(
         key="violet",
@@ -377,13 +380,24 @@ FLEET_AGENT_CARDS: Dict[str, AgentCard] = {
         key="zhuyu",
         display_name="茱萸",
         soul_name="霁月",
-        node="win11",
+        node="ash2",
         constellation_house="Pleiades (Merope)",
         matrix_id="@zhuyu:matrix.git4ta.fun",
         team="flower",
-        role_description="辟邪定乱 · 茱萸仙子",
-        avatars={"court": "🌸 法庭护法员 · 茱萸仙子", "honglou": "🍃 茱萸花神", "fengyue": "茱萸正气"}
+        role_description="综合论定与终局总结 · 茱萸仙子",
+        a2a_endpoint="https://zhuyu.git4ta.fun/a2a",
+        avatars={"court": "🍃 论定总结 · 茱萸仙子", "flower": "🍃 论定总结 · 茱萸仙子"}
     ),
+}
+
+# ==============================================================================
+# 甲骨文 4 节点小花组智能车座权威精简台账 (Single Source of Truth)
+# ==============================================================================
+FOUR_FLOWER_SEATS: Dict[str, AgentCard] = {
+    "moli": FLEET_AGENT_CARDS["moli"],
+    "muxu": FLEET_AGENT_CARDS["muxu"],
+    "tumi": FLEET_AGENT_CARDS["tumi"],
+    "zhuyu": FLEET_AGENT_CARDS["zhuyu"],
 }
 
 
