@@ -29,8 +29,11 @@ class AgentCard:
     role_description: str = ""                  # 角色描述 / 职责
     a2a_endpoint: str = ""                      # A2A 东西向协议入口
     evm_address: str = ""                       # 智能体链上钱包地址
+    workstation_room: str = ""                  # Matrix 工位房间 ID (如 !room_id:server)
+    workstation_alias: str = ""                 # Matrix 工位别名 (如 #alcyone:server)
     # engine_chassis: str = ""                    # 已废弃注释：席位不绑定中心化大模型
     # DEBATE_MODEL 已全面注释废弃：席位即车座，直连各小机部署的 K-Agent (Key-Agent) 实体
+
 
     def get_avatar(self, scenario: str = "court") -> str:
         """获取当前场景下的化身头衔"""
@@ -78,6 +81,8 @@ class AgentCard:
             "node": self.node,
             "team": self.team,
             "matrix_id": self.matrix_id,
+            "workstation_room": self.workstation_room,
+            "workstation_alias": self.workstation_alias,
             "k_agent": self.k_agent_target,
             "k_agent_target": self.k_agent_target,
             "k_agent_id": self.k_agent_id,
@@ -306,16 +311,31 @@ FLEET_AGENT_CARDS: Dict[str, AgentCard] = {
         }
     ),
 
-    # ─── 昴宿七姐妹星团 (Pleiades Flowers) ───
+    # ─── 昴宿七姐妹星团与海外工位 (Pleiades & Directorate) ───
+    "murex": AgentCard(
+        key="murex",
+        display_name="骨螺",
+        soul_name="泰尔紫",
+        node="mbp",
+        constellation_house="Directorate (Murex)",
+        matrix_id="@murex:matrix.seekkey.eu.org",
+        workstation_room="!tNnVbNeKjdHjWYCZnS:matrix.seekkey.eu.org",
+        workstation_alias="#murex:matrix.seekkey.eu.org",
+        team="directorate",
+        role_description="总领二审 · 骨螺总管",
+        avatars={"court": "🔱 终审监督官 · 骨螺", "honglou": "👑 泰尔督办", "fengyue": "紫气东来"}
+    ),
     "meigui": AgentCard(
         key="meigui",
         display_name="玫瑰",
         soul_name="绯云",
-        node="ash1",
-        constellation_house="Pleiades (Maia)",
-        matrix_id="@meigui:matrix.git4ta.fun",
+        node="onecloud1",
+        constellation_house="Pleiades (Taygete)",
+        matrix_id="@taygete:matrix.seekkey.eu.org",
+        workstation_room="!KYpXbyvOVhWoYgAEBG:matrix.seekkey.eu.org",
+        workstation_alias="#taygete:matrix.seekkey.eu.org",
         team="flower",
-        role_description="连绵对韵 · 玫瑰仙子",
+        role_description="商务拓展与高净值 · 玫瑰仙子",
         avatars={"court": "🌸 程序合议员 · 玫瑰仙子", "honglou": "🌹 玫瑰花神", "fengyue": "玫瑰绝色"}
     ),
     "moli": AgentCard(
@@ -323,34 +343,40 @@ FLEET_AGENT_CARDS: Dict[str, AgentCard] = {
         display_name="茉莉",
         soul_name="秋香",
         node="ch1",
-        constellation_house="Pleiades (Electra)",
-        matrix_id="@moli:matrix.git4ta.fun",
+        constellation_house="Pleiades (Alcyone)",
+        matrix_id="@alcyone:matrix.seekkey.eu.org",
+        workstation_room="!XmqKXyIesYCwGNVVtz:matrix.seekkey.eu.org",
+        workstation_alias="#alcyone:matrix.seekkey.eu.org",
         team="flower",
-        role_description="事实质证与发问 · 茉莉仙子",
+        role_description="亚太出海与香港枢纽 · 茉莉仙子",
         a2a_endpoint="https://moli.git4ta.fun/a2a",
-        avatars={"court": "🌸 事实质证 · 茉莉仙子", "flower": "🌸 事实质证 · 茉莉仙子"}
+        avatars={"court": "🌸 事实质证 · 茉莉仙子", "flower": "🌸 事实质证 · 茉莉仙子", "honglou": "💮 茉莉花神", "fengyue": "茉莉清婉"}
     ),
     "muxu": AgentCard(
         key="muxu",
         display_name="苜蓿",
         soul_name="碧涛",
         node="ch2",
-        constellation_house="Pleiades (Taygete)",
-        matrix_id="@muxu:matrix.git4ta.fun",
+        constellation_house="Pleiades (Electra)",
+        matrix_id="@electra:matrix.seekkey.eu.org",
+        workstation_room="!MbmNikOdtQlugRUkyf:matrix.seekkey.eu.org",
+        workstation_alias="#electra:matrix.seekkey.eu.org",
         team="flower",
-        role_description="证据链核准与矛盾分析 · 苜蓿仙子",
+        role_description="全球英文播客与新媒体 · 苜蓿仙子",
         a2a_endpoint="https://muxu.git4ta.fun/a2a",
-        avatars={"court": "🌿 证据核准 · 苜蓿仙子", "flower": "🌿 证据核准 · 苜蓿仙子"}
+        avatars={"court": "🌿 证据核准 · 苜蓿仙子", "flower": "🌿 证据核准 · 苜蓿仙子", "honglou": "🌿 苜蓿花神", "fengyue": "苜蓿青润"}
     ),
     "qiangwei": AgentCard(
         key="qiangwei",
         display_name="蔷薇",
         soul_name="金波",
-        node="ash2",
-        constellation_house="Pleiades (Alcyone)",
-        matrix_id="@qiangwei:matrix.git4ta.fun",
+        node="onecloud2",
+        constellation_house="Pleiades (Maia)",
+        matrix_id="@maia:matrix.seekkey.eu.org",
+        workstation_room="!fzMUOZdZIGlUvhsrWm:matrix.seekkey.eu.org",
+        workstation_alias="#maia:matrix.seekkey.eu.org",
         team="flower",
-        role_description="锐意争锋 · 蔷薇仙子",
+        role_description="北美开源与开发者生态 · 蔷薇仙子",
         avatars={"court": "🌸 辩论监督员 · 蔷薇仙子", "honglou": "🌺 蔷薇花神", "fengyue": "蔷薇烈烈"}
     ),
     "tumi": AgentCard(
@@ -359,21 +385,25 @@ FLEET_AGENT_CARDS: Dict[str, AgentCard] = {
         soul_name="青黛",
         node="ash1",
         constellation_house="Pleiades (Celaeno)",
-        matrix_id="@tumi:matrix.git4ta.fun",
+        matrix_id="@celaeno:matrix.seekkey.eu.org",
+        workstation_room="!TvawWWHAfNkgepnstG:matrix.seekkey.eu.org",
+        workstation_alias="#celaeno:matrix.seekkey.eu.org",
         team="flower",
-        role_description="深层动因剖析与立场辩难 · 荼蘼仙子",
+        role_description="英联邦社群与DePIN哨兵 · 荼蘼仙子",
         a2a_endpoint="https://tumi.git4ta.fun/a2a",
-        avatars={"court": "🥀 动因剖析 · 荼蘼仙子", "flower": "🥀 动因剖析 · 荼蘼仙子"}
+        avatars={"court": "🥀 动因剖析 · 荼蘼仙子", "flower": "🥀 动因剖析 · 荼蘼仙子", "honglou": "🥀 荼蘼花神", "fengyue": "荼蘼幽冷"}
     ),
     "violet": AgentCard(
         key="violet",
         display_name="紫罗兰",
         soul_name="紫霞",
-        node="ch4",
+        node="ash3",
         constellation_house="Pleiades (Sterope)",
-        matrix_id="@violet:matrix.git4ta.fun",
+        matrix_id="@sterope:matrix.seekkey.eu.org",
+        workstation_room="!JibsdSqmalCHLlQqmr:matrix.seekkey.eu.org",
+        workstation_alias="#sterope:matrix.seekkey.eu.org",
         team="flower",
-        role_description="规矩统筹 · 紫罗兰主管",
+        role_description="自动化信使与网关总控 · 紫罗兰主管",
         avatars={"court": "🌸 庭审统筹官 · 紫罗兰", "honglou": "💜 紫罗花神", "fengyue": "紫兰高绝"}
     ),
     "zhuyu": AgentCard(
@@ -382,11 +412,13 @@ FLEET_AGENT_CARDS: Dict[str, AgentCard] = {
         soul_name="霁月",
         node="ash2",
         constellation_house="Pleiades (Merope)",
-        matrix_id="@zhuyu:matrix.git4ta.fun",
+        matrix_id="@merope:matrix.seekkey.eu.org",
+        workstation_room="!mOpyfRFOBoWAqBYRKq:matrix.seekkey.eu.org",
+        workstation_alias="#merope:matrix.seekkey.eu.org",
         team="flower",
-        role_description="综合论定与终局总结 · 茱萸仙子",
+        role_description="欧盟爱沙尼亚与瑞士离岸 · 茱萸仙子",
         a2a_endpoint="https://zhuyu.git4ta.fun/a2a",
-        avatars={"court": "🍃 论定总结 · 茱萸仙子", "flower": "🍃 论定总结 · 茱萸仙子"}
+        avatars={"court": "🍃 论定总结 · 茱萸仙子", "flower": "🍃 论定总结 · 茱萸仙子", "honglou": "🍃 茱萸花神", "fengyue": "茱萸正气"}
     ),
 }
 
