@@ -1,60 +1,104 @@
 """
-Session Contract — 4 席小花组（甲骨文 4 节点）K-Agent 对抗讨论契约规范
-====================================================================
-极简架构：
-- 4 席物理 Agent（Single Source of Truth）：
-    1. moli  (🌸 茉莉 @ ch1 韩国春川)  — 事实质证与发问
-    2. muxu  (🌿 苜蓿 @ ch2 韩国春川)  — 证据核准与矛盾分析
-    3. tumi  (🥀 荼蘼 @ ash1 美国阿什本) — 深层动因剖析与立场辩难
-    4. zhuyu (🍃 茱萸 @ ash2 美国阿什本) — 综合论定与终局总结
-- 4 阶段对抗流程（4 Acts）：
-    Stage 1: 事实首发质证 (moli)
-    Stage 2: 证据链核准 (muxu)
-    Stage 3: 动机与边界辩难 (tumi)
-    Stage 4: 终局合议论定 (zhuyu)
+Session Contract — 鲲鹏志正典圆桌对抗研判契约规范 (Canonical Roundtable)
+========================================================================
+架构真源：
+1. 话题正典：第五期《陨》(S05) — 天体引力、黄土年鉴、昆阳天火与系统解释权崩溃。
+2. 4 席人物与甲骨文物理车座映射：
+   - luyang   (庐阳先生 · 中科大天体物理)  ➔ 承载于 k-agent-moli@ch1 (韩国春川)
+   - dunhuang (敦煌先生 · 兰大地质年鉴)    ➔ 承载于 k-agent-muxu@ch2 (韩国春川)
+   - shidu    (十渡先生 · 民大名学历史)    ➔ 承载于 k-agent-tumi@ash1 (美区阿什本)
+   - yuyang   (渔阳先生 · 央财法医审计)    ➔ 承载于 k-agent-zhuyu@ash2 (美区阿什本)
+3. 状态机闭环：
+   Stage 1: 深空引力与天体力学 (庐阳先生)
+   Stage 2: 地质年鉴与黄土序列 (敦煌先生)
+   Stage 3: 天象政治化与解释权 (十渡先生)
+   Stage 4: 系统崩溃与宏观化疗 (渔阳先生)
 """
 from __future__ import annotations
 
-# 4 席小花组法定白名单
-SEAT_WHITELIST = {"moli", "muxu", "tumi", "zhuyu"}
+SEAT_WHITELIST = {"moli", "muxu", "tumi", "zhuyu", "luyang", "dunhuang", "shidu", "yuyang"}
 STAGE_COUNT = 4
 
 
 def default_stage_flow() -> list[dict]:
-    """小花组 4 席对抗讨论标准阶段流"""
+    """S05《陨》圆桌漫谈四阶段演进流"""
     return [
-        {"id": 1, "name": "1. 事实质证与首发立论", "emoji": "🌸", "desc": "茉莉仙子 (moli@ch1) 调取案件首发事实，质证核心焦点与资金往来前提"},
-        {"id": 2, "name": "2. 证据核准与矛盾分析", "emoji": "🌿", "desc": "苜蓿仙子 (muxu@ch2) 逐笔比对时间序与客观书证，排查指控中的逻辑断层"},
-        {"id": 3, "name": "3. 动因剖析与立场辩难", "emoji": "🥀", "desc": "荼蘼仙子 (tumi@ash1) 深入探究公职背景与民间亲友互助的法理与伦理冲突"},
-        {"id": 4, "name": "4. 综合论定与终局总结", "emoji": "🍃", "desc": "茱萸仙子 (zhuyu@ash2) 统筹四席合议观点，依照罪刑法定原则给出终局裁断"},
+        {
+            "id": 1,
+            "name": "1. 深空引力与天体力学",
+            "emoji": "🔭",
+            "desc": "庐阳先生 (moli@ch1) 解析柯伊伯带与木星引力摄动，确立深空第一因的纯粹物理输入"
+        },
+        {
+            "id": 2,
+            "name": "2. 地质年鉴与黄土序列",
+            "emoji": "📜",
+            "desc": "敦煌先生 (muxu@ch2) 调取四十万年黄土序列与海因里希H事件，锁死微玻陨石地质铁证"
+        },
+        {
+            "id": 3,
+            "name": "3. 天象政治化与解释权",
+            "emoji": "🏛️",
+            "desc": "十渡先生 (tumi@ash1) 剖析西汉末年符命谶纬叙事，解构昆阳天火对政权合法性的致命反噬"
+        },
+        {
+            "id": 4,
+            "name": "4. 系统崩溃与宏观化疗",
+            "emoji": "📊",
+            "desc": "渔阳先生 (zhuyu@ash2) 审计资产负债表与社会流动性枯竭，闭环引力熵到政治熵的系统重置"
+        },
     ]
 
 
 def default_cast() -> list[dict]:
-    """小花组 4 席位映射"""
+    """4 席位人物格局映射"""
     return [
-        {"seat": "moli",  "archetype": "investigator", "role": "事实质证席", "team": "flower", "node": "ch1"},
-        {"seat": "muxu",  "archetype": "verifier",     "role": "证据核准席", "team": "flower", "node": "ch2"},
-        {"seat": "tumi",  "archetype": "debater",      "role": "辩难分析席", "team": "flower", "node": "ash1"},
-        {"seat": "zhuyu", "archetype": "arbiter",      "role": "综合论定席", "team": "flower", "node": "ash2"},
+        {
+            "seat": "moli",
+            "persona_key": "luyang",
+            "persona_name": "庐阳先生",
+            "title": "中科大天文与空间学院教授",
+            "angle": "深空引力与天体力学",
+            "node": "ch1",
+        },
+        {
+            "seat": "muxu",
+            "persona_key": "dunhuang",
+            "persona_name": "敦煌先生",
+            "title": "兰大第四纪地质国重室教授",
+            "angle": "地质年鉴与黄土序列",
+            "node": "ch2",
+        },
+        {
+            "seat": "tumi",
+            "persona_key": "shidu",
+            "persona_name": "十渡先生",
+            "title": "中央民大名学与历史学教授",
+            "angle": "天象政治化与解释权",
+            "node": "ash1",
+        },
+        {
+            "seat": "zhuyu",
+            "persona_key": "yuyang",
+            "persona_name": "渔阳先生",
+            "title": "央财金融操盘手 · 法医审计席",
+            "angle": "系统崩溃与宏观化疗",
+            "node": "ash2",
+        },
     ]
 
 
 def default_contract() -> dict:
-    """内置《极昼》4 席小花组极简讨论契约"""
+    """内置 S05《陨》正典契约"""
     return {
-        "protocol": "flower_quad_debate",
+        "protocol": "roundtable_s05_meteorite",
         "meta": {
-            "title": "极昼",
-            "source_type": "留置案讨论",
-            "defendant": "尊长",
-            "charge": "民间借贷过桥、职务影响与失职犯罪边界争议",
-            "court_name": "安徽省阜阳市中级人民法院",
-            "case_number": "极昼留置专案研判",
-            "key_facts": "2016年尊长筹措1000万资金过桥划转亲友企业救急，后分10次平价全额还本，中煤资产无实际亏空；2026年被留置审查。",
-            "prosecution_claim": "是否构成利用特定职务影响力隐形背书或规避合规监管？",
-            "defense_claim": "资金链闭环全额归还、零利差无自肥、客观零亏空，符合法无明文规定不为罪。",
-            "focus": "区分公职行为与民间正常救急；职务隐性影响的认定红线与刑法谦抑性。",
+            "title": "第五期 · 陨",
+            "episode_id": "S05",
+            "source_type": "正典圆桌",
+            "core_formula": r"F = G \frac{M m}{r^2} \implies \text{引力熵} \implies \text{政治熵} \implies \text{系统重置}",
+            "focus": "天火、深空引力、黄土年鉴与一个巨型系统如何彻底失去解释权",
+            "key_facts": "公元23年昆阳之战城下出现低空大火球空爆；柯克伍德间隙引力摄动；四十万年洛川黄土剖面磁化率震荡；王莽改制失败与解释权全面归零。",
         },
         "stage_flow": default_stage_flow(),
         "cast": default_cast(),
@@ -62,31 +106,34 @@ def default_contract() -> dict:
             {
                 "stage": 1,
                 "seat": "moli",
-                "instruction": "【第一轮 · 事实质证】作为 ch1 事实质证席，调取全案资金流水首发证据。针对所谓利用职务借道过桥的指控，直接质证资金借入与归还的完整商业借据凭据，明确区分正常救急过桥与权钱交易对价！"
+                "persona": "庐阳先生",
+                "instruction": "【第一棒 · 深空第一因】从柯伊伯带与木星引力弹弓切入。阐明昆阳城下的天火绝非小说家言，而是天体力学小行星轨道共振摄动的物理必然，深空引力作为不以人的意志为转移的客观物理输入！"
             },
             {
                 "stage": 2,
                 "seat": "muxu",
-                "instruction": "【第二轮 · 证据核准】作为 ch2 证据核准席，正面接续茉莉仙子提出的质证疑点。重点比对还款时间序与行政审批节点，指出行政审批发生时借贷早已平价归还的时间错位，核准是否存在客观财产损失！"
+                "persona": "敦煌先生",
+                "instruction": "【第二棒 · 地表铁证】接续深空引力输入，调取黄土高原四十万年黄土序列与深海沉积物指纹。结合海因里希H事件东亚季风骤变，证明当时气候与生态的极度紧绷脆弱，火流星如何成为压垮骆驼的最后一根稻草！"
             },
             {
                 "stage": 3,
                 "seat": "tumi",
-                "instruction": "【第三轮 · 动因辩难】作为 ash1 辩难立论席，切入最深层法理与伦理冲突。正面回答前两席关于流水完备性的论述，同时剖析公职人员身份对亲友企业获得的隐性信誉背书，论证民间借贷司法保护界限！"
+                "persona": "十渡先生",
+                "instruction": "【第三棒 · 政治解释权】承接天地客观物理证据，转入人间社会心理机制。剖析王莽如何以符命谶纬夺权，又如何因昆阳天火被刘秀阵营反向编码为天罚，赖以立国的解释权武器瞬间反噬其自身！"
             },
             {
                 "stage": 4,
                 "seat": "zhuyu",
-                "instruction": "【第四轮 · 终局论定】作为 ash2 综合论定席，收束前三席关于事实、证据链与动因辩难的合议结论。逐项检验定罪构成要件，坚持疑罪从无与刑法谦抑原则，给出终局合议意见！"
+                "persona": "渔阳先生",
+                "instruction": "【第四棒 · 系统总清盘】从法医财务审计视角收官。结合王莽四次币制改革导致的资产负债表与流动性彻底枯竭，论证引力熵引爆系统总断路器，帝国陷入不可逆化疗与格式化重置！"
             },
         ],
-        "constraints": {"max_speech_chars": 350, "tone": "严谨、深刻、直击要害"},
+        "constraints": {"max_speech_chars": 400, "tone": "深邃、雄浑、穿透历史"},
         "token_policy": "fixed_order",
     }
 
 
 def validate_contract(contract: dict) -> tuple[bool, list[str]]:
-    """确定性契约校验"""
     problems = []
     if not isinstance(contract, dict):
         return False, ["契约不是合法字典对象"]
@@ -97,12 +144,12 @@ def validate_contract(contract: dict) -> tuple[bool, list[str]]:
         problems.append(f"阶段数应为 {STAGE_COUNT}，实为 {len(stages)}")
 
     if not acts:
-        problems.append("acts 为空——缺少发言序列")
+        problems.append("acts 为空")
 
     for idx, a in enumerate(acts):
         seat = a.get("seat")
         if seat not in SEAT_WHITELIST:
-            problems.append(f"acts[{idx}] seat={seat} 不在小花组白名单")
+            problems.append(f"acts[{idx}] seat={seat} 不在白名单")
         if not (a.get("instruction") or "").strip():
             problems.append(f"acts[{idx}] 指令为空")
 
@@ -110,13 +157,13 @@ def validate_contract(contract: dict) -> tuple[bool, list[str]]:
 
 
 def summarize_contract(contract: dict) -> str:
-    """契约摘要说明"""
     meta = contract.get("meta", {})
     stages = contract.get("stage_flow", [])
     acts = contract.get("acts", [])
     return (
-        f"🌸 协议：4 席小花组对抗讨论 ({contract.get('protocol')})\n"
-        f"📖 议题：{meta.get('title', '极昼')}\n"
-        f"🎯 争点：{meta.get('focus', '事实与法律边界')}\n"
-        f"⚡ 席位序列：{' ➔ '.join(a['seat'] for a in acts)} (共 {len(stages)} 阶段)"
+        f"🦅 协议：正典圆桌漫谈 ({contract.get('protocol')})\n"
+        f"📖 期次：{meta.get('title', '第五期 · 陨')}\n"
+        f"📊 公式：{meta.get('core_formula', '')}\n"
+        f"🎯 焦点：{meta.get('focus', '')}\n"
+        f"🎙️ 轮转：{' ➔ '.join(a.get('persona', a['seat']) for a in acts)} (共 {len(stages)} 棒)"
     )

@@ -1,13 +1,14 @@
-"""RobertTokenRingEngine — 4 席小花组物理 Key-Agent 令牌环对抗讨论引擎
-架构核心纪律：
-1. 席位即智能车座（Agent Card），直连甲骨文各小机部署的 K-Agent 运行时（通过三级域名与固定隧道）。
-2. 彻底废弃集中式大模型发动机（No centralized LLM proxy）。
-3. 外部调度请求统一携带 X-ASN-Token 鉴权门禁。
-4. 4 席小花组对抗闭环（Single Source of Truth）：
-   - 🌸 茉莉 (moli @ ch1 韩国春川)：事实质证与发问
-   - 🌿 苜蓿 (muxu @ ch2 韩国春川)：证据核准与矛盾分析
-   - 🥀 荼蘼 (tumi @ ash1 美国阿什本)：深层动因剖析与立场辩难
-   - 🍃 茱萸 (zhuyu @ ash2 美国阿什本)：综合论定与终局总结
+"""RobertTokenRingEngine — 4 席正典圆桌漫谈 K-Agent 调度引擎
+架构真源与权责分工：
+1. 话题正典：第五期《陨》(S05) — 天体引力、黄土年鉴、昆阳天火与系统解释权崩溃。
+2. 4 席人物与甲骨文物理车座映射：
+   - 🔭 庐阳先生 (天体力学)  ➔ 承载于 k-agent-moli@ch1 (韩国春川)
+   - 📜 敦煌先生 (地质年鉴)  ➔ 承载于 k-agent-muxu@ch2 (韩国春川)
+   - 🏛️ 十渡先生 (政治解释)  ➔ 承载于 k-agent-tumi@ash1 (美区阿什本)
+   - 📊 渔阳先生 (系统化疗)  ➔ 承载于 k-agent-zhuyu@ash2 (美区阿什本)
+3. 调度原则：
+   - 外部调用必须携带 X-ASN-Token 门禁。
+   - 物理节点不可达时由智能车座保真响应，确保漫谈流程严密完整。
 """
 
 import datetime
@@ -18,19 +19,50 @@ from typing import Dict, List, Optional, Tuple
 import requests
 
 
-class RobertTokenRingEngine:
-    """4 席小花组 K-Agent 令牌环调度引擎"""
+# S05 正典人物格局预设
+PERSONA_REGISTRY = {
+    "moli": {
+        "persona_key": "luyang",
+        "name": "庐阳先生",
+        "title": "中科大天文与空间学院教授",
+        "angle": "深空引力与天体力学",
+        "emoji": "🔭",
+    },
+    "muxu": {
+        "persona_key": "dunhuang",
+        "name": "敦煌先生",
+        "title": "兰大第四纪地质国重室教授",
+        "angle": "地质年鉴与黄土序列",
+        "emoji": "📜",
+    },
+    "tumi": {
+        "persona_key": "shidu",
+        "name": "十渡先生",
+        "title": "中央民大名学与历史学教授",
+        "angle": "天象政治化与解释权",
+        "emoji": "🏛️",
+    },
+    "zhuyu": {
+        "persona_key": "yuyang",
+        "name": "渔阳先生",
+        "title": "央财金融操盘手 · 法医审计席",
+        "angle": "系统崩溃与宏观化疗",
+        "emoji": "📊",
+    },
+}
 
-    def __init__(self, base_url: str = None, api_key: str = None, article_text: str = "", scenario: str = "flower"):
-        # 兼容旧参数签名的同时，全面废弃 model 客户端，转由 K-Agent 物理端点调度
+
+class RobertTokenRingEngine:
+    """4 席正典圆桌漫谈令牌环调度引擎"""
+
+    def __init__(self, base_url: str = None, api_key: str = None, article_text: str = "", scenario: str = "canon"):
         self.article_text = article_text or ""
         self.scenario = scenario
-        self.token_holder = "moli"          # 初始令牌在茉莉（ch1 质证席）手中
-        self.shared_context: List[dict] = []  # 共享法庭/对抗笔录上下文 (Shared Memory)
-        self.steps: List[dict] = []         # 过程元数据：每步耗时/K-Agent席位/端点连通状态
+        self.token_holder = "moli"          # 初始第 1 棒在庐阳先生 (moli@ch1) 手中
+        self.shared_context: List[dict] = []
+        self.steps: List[dict] = []
         self.agent_token = os.getenv("ASN_AGENT_TOKEN", "asn_sec_8f93e1b740c84d62b9a7812de405")
 
-    # ---- 共享上下文 ----
     def add_to_shared_context(self, avatar: str, content: str, team: str = ""):
         self.shared_context.append({"header": str(avatar), "content": str(content), "team": team})
 
@@ -39,76 +71,74 @@ class RobertTokenRingEngine:
             f"【{m['header']}】:\n{m['content']}" for m in self.shared_context
         )
 
-    # ---- 定向接话上下文 ----
-    def _build_context_blocks(self, team: str, en_key: str) -> List[Tuple[str, str]]:
-        """按互通策略组装注入块：首发议题锚 + 前一位陈词 + 既往全景。"""
+    def _build_context_blocks(self, en_key: str) -> List[Tuple[str, str]]:
         blocks = []
         for m in self.shared_context:
-            if m.get("team") == "indictment" or m.get("team") == "topic":
-                blocks.append(("讨论议题（核心事实与指控锚点）", m["content"]))
+            if m.get("team") == "canon_meta" or m.get("team") == "topic":
+                blocks.append(("正典案卷背景 (S05《陨》)", m["content"]))
                 break
-        if self.shared_context and self.shared_context[-1].get("team") not in ("indictment", "topic"):
+        if self.shared_context and self.shared_context[-1].get("team") not in ("canon_meta", "topic"):
             last = self.shared_context[-1]
-            blocks.append((f"前一位发言席位 ({last['header']}) 的论辩陈词", last["content"]))
-        if self.shared_context:
-            all_prev = [m for m in self.shared_context if m.get("team") not in ("indictment", "topic")]
-            if len(all_prev) > 1:
-                summary = "；".join(f"{m['header']} 论点摘要: {m['content'][:80]}..." for m in all_prev[:-1])
-                blocks.append(("前序各席合议脉络", summary))
+            blocks.append((f"前一位漫谈同侪 ({last['header']}) 的核心论述", last["content"]))
         return blocks
 
-    # ---- 议题与案由锚点 ----
-    def draft_official_indictment(self, meta: dict = None) -> str:
-        """生成 4 席小花组对抗讨论的正式议题锚点"""
+    def draft_roundtable_topic(self, meta: dict = None) -> str:
+        """生成 S05《陨》圆桌研判论题锚点"""
         if meta:
-            title = meta.get("title") or "案由讨论"
-            facts = meta.get("key_facts") or "相关案件事实与争议焦点"
-            claim = meta.get("prosecution_claim") or "待查证与裁决核心诉求"
-            charge = meta.get("charge") or "事实认定与责任归属"
+            title = meta.get("title", "第五期 · 陨")
+            formula = meta.get("core_formula", r"F = G \frac{M m}{r^2} \implies \text{引力熵} \implies \text{政治熵}")
+            facts = meta.get("key_facts", "昆阳城下天火、木星引力摄动、黄土剖面与王莽政权解释权崩溃。")
+            focus = meta.get("focus", "深空天火与一个巨型系统如何失去解释权")
             return (
-                f"【核心议题立项】围绕《{title}》案：\n"
-                f"1. 涉嫌违规或焦点定性：{charge}\n"
-                f"2. 基础案情事实要件：{facts}\n"
-                f"3. 待质辩核心争点：{claim}\n"
-                f"（本案移交甲骨文 4 节点小花组 K-Agent 闭环质证：moli@ch1 质证、muxu@ch2 核准、tumi@ash1 辩难、zhuyu@ash2 论定）"
+                f"【正典议题立项】《{title}》圆桌漫谈：\n"
+                f"1. 核心理论公式：{formula}\n"
+                f"2. 研判核心焦点：{focus}\n"
+                f"3. 宏观背景：{facts}\n"
+                f"（本案由甲骨文 4 节点智能车座轮流开聊：luyang@ch1 ➔ dunhuang@ch2 ➔ shidu@ash1 ➔ yuyang@ash2）"
             )
         return (
-            "【核心议题立项】围绕《极昼》留置案：\n"
-            "1. 焦点定性：涉及特定职务影响力民间拆借与拆分转贷资金链路。\n"
-            "2. 基础案情事实：2026年8月3日相关涉案人员被留置，多笔家族名下借贷流水存在交织。\n"
-            "3. 待质辩争点：主观直接故意 vs 职务行为与家族民间互助的合法界限。\n"
-            "（本案移交甲骨文 4 节点小花组 K-Agent 闭环质证：moli@ch1 质证、muxu@ch2 核准、tumi@ash1 辩难、zhuyu@ash2 论定）"
+            "【正典议题立项】《第五期 · 陨》圆桌漫谈：\n"
+            r"核心公式：F = G \frac{M m}{r^2} \implies \text{引力熵} \implies \text{政治熵} \implies \text{系统重置}" "\n"
+            "研判焦点：解构“天火、深空引力、黄土年鉴与一个巨型系统如何彻底失去解释权”。"
         )
 
-    # ---- 4 席物理 Agent 发言调度 ----
+    # 兼容历史方法签名
+    def draft_official_indictment(self, meta: dict = None) -> str:
+        return self.draft_roundtable_topic(meta)
+
     def execute_speech(self, seat_info: dict, instruction: str) -> Tuple[str, str]:
-        """按令牌环调度发言：通过三级域名与固定隧道直接调用物理小机 K-Agent"""
-        avatars = seat_info.get("avatars", {})
-        header = avatars.get(self.scenario, avatars.get("flower", avatars.get("court", seat_info.get("en_key", "席位"))))
+        """按令牌环推进发言：优先调用物理节点 K-Agent，离线时执行高保真正典发言"""
         en_key = seat_info.get("en_key", "")
         node = seat_info.get("node", "oci")
-        team = seat_info.get("team", "flower")
+        p_info = PERSONA_REGISTRY.get(en_key, {
+            "name": seat_info.get("display_name", en_key),
+            "angle": "专业研判",
+            "emoji": "🎙️"
+        })
+        persona_name = p_info["name"]
+        persona_angle = p_info["angle"]
+        header = f"{p_info['emoji']} {persona_name} · {persona_angle}"
         k_agent = seat_info.get("k_agent_target") or f"k-agent-{en_key}@{node}"
         endpoint = seat_info.get("k_agent_endpoint") or f"https://{en_key}.git4ta.fun/a2a"
 
-        blocks = self._build_context_blocks(team, en_key)
+        blocks = self._build_context_blocks(en_key)
         ctx_str = "\n\n".join(f"【{label}】:\n{content}" for label, content in blocks) or "(空)"
-        doc_mem = f"\n【背景记忆资产】:\n{self.article_text[:12000]}\n" if self.article_text else ""
+        doc_mem = f"\n【卷宗背景】:\n{self.article_text[:12000]}\n" if self.article_text else ""
 
         prompt = (
-            f"你是 ASN 认知联邦小花组物理席位：【{header}】（实体：{k_agent}）。\n"
-            f"你当前持有【法庭发言令牌 Token】！令牌现在在你手中，你必须进行对抗辩论陈词。\n"
+            f"你是《鲲鹏志》正典圆桌漫谈学者：【{persona_name}】（物理实体：{k_agent}，主攻：{persona_angle}）。\n"
+            f"你当前持有【圆桌漫谈发言令牌 Token】！你必须接续前序同侪的观点展开深刻剖析。\n"
             f"{doc_mem}\n"
-            f"【定向接话上下文 (Shared Memory)】:\n{ctx_str}\n"
-            f"你的当轮任务指令：{instruction}\n"
-            f"发言要求：立场鲜明、逻辑精密、直击前席漏洞，不讲空话套话，控制在 350 字以内。"
+            f"【前序漫谈脉络 (Shared Context)】:\n{ctx_str}\n"
+            f"任务指引：{instruction}\n"
+            f"发言要求：雄浑深邃、穿透历史与物理本质，有极强的知识浓度与辨析力，不讲空话，控制在 350 字以内。"
         )
 
         headers = {
             "Content-Type": "application/json",
             "X-ASN-Token": self.agent_token,
             "Authorization": f"Bearer {self.agent_token}",
-            "User-Agent": "ASN-GAN-Orchestrator/2.0",
+            "User-Agent": "ASN-GAN-Roundtable/2.0",
         }
 
         payload = {
@@ -117,8 +147,8 @@ class RobertTokenRingEngine:
             "params": {
                 "from": "asn-gan",
                 "to": en_key,
+                "persona": persona_name,
                 "node": node,
-                "seat": en_key,
                 "instruction": instruction,
                 "context": ctx_str,
                 "prompt": prompt,
@@ -133,8 +163,7 @@ class RobertTokenRingEngine:
         status_msg = ""
 
         try:
-            # 直连海外甲骨文对应小机的固定隧道 A2A 门禁接口
-            resp = requests.post(endpoint, json=payload, headers=headers, timeout=8)
+            resp = requests.post(endpoint, json=payload, headers=headers, timeout=6)
             if resp.status_code == 200:
                 try:
                     res_json = resp.json()
@@ -152,14 +181,13 @@ class RobertTokenRingEngine:
 
         duration = round(time.time() - t0, 2)
 
-        # 若端点未就绪或返回异常，执行高保真智能车座逻辑，保障讨论流程完整严密
         if not ok or not content:
-            content = self._generate_seat_response(en_key, header, node, instruction, blocks)
+            content = self._generate_canonical_speech(en_key, persona_name, persona_angle, node)
 
         self.steps.append({
             "seat": en_key,
+            "persona": persona_name,
             "header": header,
-            "team": team,
             "k_agent": k_agent,
             "node": node,
             "endpoint": endpoint,
@@ -168,63 +196,52 @@ class RobertTokenRingEngine:
             "chars": len(content),
             "ok": ok,
             "live_status": "🟢 Live A2A" if ok else f"🟡 Chassis Ready ({status_msg or 'Standby'})",
-            "ctx": [{"label": label, "chars": len(c)} for label, c in blocks],
         })
 
-        self.add_to_shared_context(header, content, team)
+        self.add_to_shared_context(header, content, "roundtable")
         return (header, content)
 
-    # ---- 席位保真陈词逻辑 ----
-    def _generate_seat_response(self, en_key: str, header: str, node: str, instruction: str, blocks: List[Tuple[str, str]]) -> str:
-        """根据小花组 4 席位权责分工生成严密辩论响应"""
-        prev_summary = blocks[-1][1][:120] if blocks else "案件事实与控辩争端"
+    def _generate_canonical_speech(self, en_key: str, name: str, angle: str, node: str) -> str:
+        """S05《陨》正典权威台词"""
         if en_key == "moli":
-            # 茉莉 @ ch1：事实质证
+            # 庐阳先生 @ ch1
             return (
-                f"【{header} · 质证发言】作为春川节点（{node}）事实质证席，我首当其冲调取本案首发证据链。"
-                f"针对前序指控中所谓‘拆借中介与职务勾连’的认定，必须明确区分两个法律概念：一是正常亲友往来中的紧急过桥拆借，"
-                f"二是否存在利用特定职权为资金提供隐蔽增信。从现有卷宗看，资金进出均具有完整的商业借据与银行流水轨迹，"
-                f"不能以‘事后结果’简单推断‘事前合谋’。请下一席核对关键资金链路的对应凭证！"
+                "各位同侪，读完这四万字卷宗，我必须先从深空第一因立个桩。世人总以为公元23年昆阳城下的那场‘天火’是小说家言，"
+                "甚至归于所谓的大魔导师招唤。但在天体力学上，这完全是柯伊伯带与小行星带在木星引力摄动下的必然产物。"
+                "当柯克伍德间隙的引力共振被打破，流星体以每秒数十公里的速度切入高层大气，它的动能瞬间转化为等离子体与强激波。"
+                "深空引力根本不在乎地上的皇帝姓王还是姓刘，它是纯粹客观的物理输入！"
             )
         elif en_key == "muxu":
-            # 苜蓿 @ ch2：证据核准
+            # 敦煌先生 @ ch2
             return (
-                f"【{header} · 证据核准】接续茉莉仙子提出的质证疑点，春川节点（{node}）核准席已全量比对转账流水。"
-                f"关于《极昼》卷宗内指控的关键争议款项，现有客观证据显示：款项划转发生时，所谓‘请托事项’尚未进入实质行政审批序列，"
-                f"时间节点存在明显的错位；且资金利息严格参照当地民间借贷司法保护上限执行，未见超额异常利息转移。"
-                f"控方若要确立利益输送链条，证据闭环仍有关键断层！"
+                "庐阳兄讲得透彻，深空引力是客观的，而我们兰大在黄土高原四十万年黄土序列与深海沉积物中，切切实实找到了这种物理输入的‘指纹’。"
+                "大家看海因里希冰期事件（Heinrich Event），那几个冰阶期的大冰筏崩塌，伴随着严重的异常气候震荡。"
+                "公元初年前后，东亚季风骤变、黄土剖面磁化率剧烈下挫，说明当时整个生态系统已经极度紧绷脆弱。"
+                "这时候只要一颗火流星低空空爆，带来毫秒级的极高温与狂风暴雨，就会成为压垮脆弱地表系统的最后一击！"
             )
         elif en_key == "tumi":
-            # 荼蘼 @ ash1：立场辩难
+            # 十渡先生 @ ash1
             return (
-                f"【{header} · 辩难立论】阿什本节点（{node}）观察席直面核心法理冲突。"
-                f"前两席对资金与流水客观性的核验切中要害，但辩护方不可回避另一核心事实：涉案人身份具有特殊公职背景，"
-                f"在长达数年的资金往来中，亲友企业是否客观上获得了隐性心理背书？法理认定不能脱离实体社会关系。"
-                f"我们既要防止把正当民间借贷泛罪化，也要警惕以‘亲属自决’为名规避公职廉洁性义务！"
+                "两位理工科同侪把‘天’与‘地’的硬证据夯实了，但人间的逻辑恰恰在此转折。天灾本身并不会直接颠覆朝代，关键在于谁掌握了‘解释权’！"
+                "西汉末年，王莽本就是靠着一整套精密的‘符命谶纬’爬上皇位的，他的合法性全部寄生在天人感应的叙事里。"
+                "然而昆阳之战那场低空空爆，偏偏在几十万大军眼皮底下发生了。刘秀阵营瞬间把这场自然天灾编码成了‘天罚新朝、天命归汉’。"
+                "王莽曾经赖以立国的‘解释权武器’，瞬间反噬其自身，直接造成了全军心理防线的雪崩！"
             )
         elif en_key == "zhuyu":
-            # 茱萸 @ ash2：综合论定
+            # 渔阳先生 @ ash2
             return (
-                f"【{header} · 终局论定】阿什本节点（{node}）合议裁决席作全场四席收束。"
-                f"综合茉莉的事实穿透、苜蓿的证据链校验与荼蘼的利益边界辩难，本席论定如下：本案属于典型的特定公职人员家族民间借贷与职务行为交织案件。"
-                f"一、排除非法的直接权钱交易；二、对未能严格隔离亲友借贷隐性影响力的行为应予以纪律性全面清退与规范；"
-                f"三、坚持疑罪从无、罪刑法定原则。各席意见归档存证，全案庭辩圆满闭环！"
+                "十渡先生点到了死穴——这就是系统解释权的彻底归零！我用法医财务审计的视角看王莽新朝：当时王莽推行四次币制改革、强推王田制，"
+                "把民间的资产负债表全部打烂，社会流动性完全枯竭，系统内部的‘政治熵’和‘经济熵’早就顶到了临界点。"
+                "深空的这颗陨石，就像是一个外生的极端压力测试，直接引爆了系统的总断路器！当全天下的人都不再相信朝廷的解释、"
+                "朝廷也再无法向百姓兑付基本秩序时，这个庞大的帝国就必须被推入‘系统化疗’——旧代码彻底推倒，唯有在废墟上重新格式化。"
+                "这就完美闭环了我们的核心公式：深空引力输入 ➔ 地质年鉴 ➔ 社会感知 ➔ 政治解释 ➔ 合法性危机 ➔ 秩序重置！"
             )
-        return f"【{header}】席位物理实体 {node} 响应指令：严格依照法理推演，记录案由并推进讨论。"
+        return f"【{name}】实体 {node} 承载观点推进正典漫谈。"
 
-    # ---- 执行 4 人讨论流程 ----
     def execute_contract(self, contract: dict, seat_registry: dict, progress_cb=None, emit_cb=None) -> List[dict]:
-        """按 4 席小花组顺序执行讨论序列"""
         acts = contract.get("acts", [])
         total = len(acts)
         messages = []
-
-        avatar_map = {
-            "moli": "🌸",
-            "muxu": "🌿",
-            "tumi": "🥀",
-            "zhuyu": "🍃",
-        }
 
         for idx, act in enumerate(acts, 1):
             seat_key = act.get("seat")
@@ -234,11 +251,14 @@ class RobertTokenRingEngine:
 
             header, content = self.execute_speech(seat_info, act.get("instruction", ""))
             step_meta = self.steps[-1] if self.steps else {}
+            p_info = PERSONA_REGISTRY.get(seat_key, {})
             msg = {
                 "role": header,
                 "header": header,
                 "content": content,
-                "avatar": avatar_map.get(seat_key, "🌸"),
+                "avatar": p_info.get("emoji", "🎙️"),
+                "persona": p_info.get("name", header),
+                "angle": p_info.get("angle", ""),
                 "node": step_meta.get("node", ""),
                 "k_agent": step_meta.get("k_agent", ""),
                 "live_status": step_meta.get("live_status", ""),
