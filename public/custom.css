@@ -1,0 +1,155 @@
+@import url('https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.6.0/lxgwwenkaiscreen.css');
+
+/* 全局字体及 Chainlit 文本样式定制，确保欢迎页面（如落霞与孤鹜齐飞）和消息内容均生效 */
+body, html, .cl-message, .cl-message-content, .MuiTypography-root, blockquote, p, h1, h2, h3, h4, h5, h6, li {
+  font-family: 'LXGW WenKai Screen', 'PingFang SC', sans-serif !important;
+}
+
+/* 鲲鹏志 · 宽屏高级视觉定制样式 */
+
+:root {
+  --row-bg: rgba(0, 0, 0, 0.02);
+  --row-border: rgba(0, 0, 0, 0.08);
+  --whisper-bg: rgba(0, 0, 0, 0.01);
+  --whisper-border: rgba(0, 0, 0, 0.06);
+  --whisper-text: rgba(0, 0, 0, 0.65);
+  --speech-text-color: #2c3e50;
+  --speech-bg: rgba(0, 0, 0, 0.02);
+}
+
+.dark, [data-theme='dark'], body.dark-theme {
+  --row-bg: rgba(255, 255, 255, 0.03);
+  --row-border: rgba(255, 255, 255, 0.08);
+  --whisper-bg: rgba(255, 255, 255, 0.02);
+  --whisper-border: rgba(255, 255, 255, 0.06);
+  --whisper-text: rgba(255, 255, 255, 0.6);
+  --speech-text-color: rgba(255, 255, 255, 0.9);
+  --speech-bg: rgba(255, 255, 255, 0.03);
+}
+
+.cl-message, .cl-message-content {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.cl-message-content {
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+.debate-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  width: 100%;
+  gap: 24px;
+  margin: 16px 0;
+  font-family: 'LXGW WenKai Screen', Inter, -apple-system, sans-serif;
+}
+
+.whisper-bar {
+  flex: 0 0 30%;
+  font-size: 0.88em;
+  padding: 16px;
+  border-radius: 12px;
+  background: var(--whisper-bg);
+  border: 1px dashed var(--whisper-border);
+  color: var(--whisper-text);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  height: fit-content;
+  align-self: flex-start;
+}
+
+.whisper-bar.active {
+  border: 1px solid rgba(128, 128, 128, 0.2);
+  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.25);
+  transform: translateY(-2px);
+}
+
+.whisper-bar.left-bar.active {
+  border-left: 4px solid #ef4444;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.08), rgba(255, 255, 255, 0.01));
+  color: var(--speech-text-color);
+}
+
+.whisper-bar.right-bar.active {
+  border-left: 4px solid #3b82f6;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(255, 255, 255, 0.01));
+  color: var(--speech-text-color);
+}
+
+.whisper-title {
+  font-weight: 700;
+  margin-bottom: 8px;
+  font-size: 0.95em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.left-bar .whisper-title { color: #ef4444; }
+.right-bar .whisper-title { color: #3b82f6; }
+
+.whisper-placeholder {
+  font-style: italic;
+  opacity: 0.4;
+  text-align: center;
+  padding: 12px 0;
+}
+
+.speech-content {
+  flex: 1;
+  padding: 20px 26px;
+  border-radius: 16px;
+  background: var(--speech-bg);
+  border: 1px solid var(--row-border);
+  box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  color: var(--speech-text-color);
+}
+
+.speech-content.pro-side { border-top: 4px solid #ef4444; }
+.speech-content.con-side { border-top: 4px solid #3b82f6; }
+
+/* 固定侧栏 */
+.fixed-sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  z-index: 9990;
+  background: #0b0f19;
+  overflow: hidden;
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.5);
+  pointer-events: all;
+}
+
+#kz-left {
+  left: 0;
+  width: 23.33%;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+#kz-right {
+  right: 0;
+  width: 33.33%;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.fixed-sidebar iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+#root {
+  margin-left: 28.33% !important;
+  margin-right: 0 !important;
+  max-width: 33.33% !important;
+}
+
+.MuiAppBar-root {
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+}

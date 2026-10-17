@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>鲲鹏志 · 太虚场景与 AGI 评估大厅 (Lobby Hub)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: #04070d;
+      color: #e0f7fc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      background-image: radial-gradient(circle at 50% 30%, #0d1933 0%, #04070d 70%);
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .header h1 {
+      font-size: 28px;
+      color: #00f0ff;
+      letter-spacing: 2px;
+      text-shadow: 0 0 15px rgba(0,240,255,0.4);
+      margin-bottom: 8px;
+    }
+    .header p {
+      font-size: 14px;
+      color: #8ab4f8;
+    }
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      max-width: 1000px;
+      width: 100%;
+    }
+    .card {
+      background: rgba(10, 16, 32, 0.8);
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: #00f0ff;
+      box-shadow: 0 12px 32px rgba(0,240,255,0.25);
+    }
+    .card-icon {
+      font-size: 36px;
+    }
+    .card-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #00f0ff;
+    }
+    .card-desc {
+      font-size: 12px;
+      color: #9ca3af;
+      line-height: 1.6;
+      flex: 1;
+    }
+    .card-tag {
+      align-self: flex-start;
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: rgba(0, 240, 255, 0.15);
+      color: #7000ff;
+      border: 1px solid rgba(0, 240, 255, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>🌀 鲲鹏志 · 太虚场景与 AGI 评估大厅</h1>
+    <p>Hao123 式模块化片场调度与双盲测试导航中枢</p>
+  </div>
+
+  <div class="grid-container">
+
+    <!-- 模块 1: 螺线谱 -->
+    <a class="card" href="/public/spiral-notation/index.html" target="_blank">
+      <div class="card-icon">🌀</div>
+      <div class="card-tag">AGI 评估探针</div>
+      <div class="card-title">螺线谱 (Spiral Notation) 引擎</div>
+      <div class="card-desc">12地支螺旋几何坐标、8席位 Ground 根音、三合局和声亮灯多边形与莫扎特《小星星》轨迹。</div>
+    </a>
+
+    <!-- 模块 2: 小花组网红 Matrix 直播宫 -->
+    <a class="card" href="/public/flower-team-matrix.html" target="_blank">
+      <div class="card-icon">🌸</div>
+      <div class="card-tag">媒体与报道</div>
+      <div class="card-title">小花组 · 网红 Matrix 媒体直播宫</div>
+      <div class="card-desc">法庭肖像速记、即时画稿展示与受邀观众异步互动提问通道。</div>
+    </a>
+
+    <!-- 模块 3: 12黄道法庭看盘 -->
+    <a class="card" href="/?scenario=criminal_court">
+      <div class="card-icon">⚖️</div>
+      <div class="card-tag">辩论看盘场</div>
+      <div class="card-title">《极昼》12黄道与紫罗兰法庭</div>
+      <div class="card-desc">24幕刑事诉讼剧本看盘、4v4 辩论对抗与 Moneyball 数据教练。</div>
+    </a>
+
+    <!-- 模块 4: 群峰蜂群 8 大家族 -->
+    <a class="card" href="/?scenario=qunfeng_fengqun">
+      <div class="card-icon">💼</div>
+      <div class="card-tag">地缘控制论</div>
+      <div class="card-title">《群峰·蜂群》2041 太空军场</div>
+      <div class="card-desc">徐雅风射线交汇处、肖涵父母 (石化院/中远VP) 8大家族史与白令海水文。</div>
+    </a>
+
+  </div>
+
+</body>
+</html>
