@@ -141,17 +141,19 @@ class RobertTokenRingEngine:
             "User-Agent": "ASN-GAN-Roundtable/2.0",
         }
 
+        # 标准 A2A v2 (a2a-protocol.org) JSON-RPC 规范
+        msg_id = f"msg-{en_key}-{int(time.time() * 1000)}"
         payload = {
             "jsonrpc": "2.0",
-            "method": "a2a.sendMessage",
+            "method": "SendMessage",
             "params": {
-                "from": "asn-gan",
-                "to": en_key,
-                "persona": persona_name,
-                "node": node,
-                "instruction": instruction,
-                "context": ctx_str,
-                "prompt": prompt,
+                "message": {
+                    "messageId": msg_id,
+                    "role": "ROLE_USER",
+                    "parts": [
+                        {"text": prompt}
+                    ]
+                }
             },
             "id": int(time.time() * 1000)
         }
@@ -163,11 +165,18 @@ class RobertTokenRingEngine:
         status_msg = ""
 
         try:
-            resp = requests.post(endpoint, json=payload, headers=headers, timeout=6)
+            resp = requests.post(endpoint, json=payload, headers=headers, timeout=20)
             if resp.status_code == 200:
                 try:
                     res_json = resp.json()
-                    content = (res_json.get("result", {}) or {}).get("reply", "") or res_json.get("reply", "")
+                    res_obj = res_json.get("result", {}) or {}
+                    if isinstance(res_obj, dict) and "message" in res_obj:
+                        msg_obj = res_obj["message"] or {}
+                        parts = msg_obj.get("parts", [])
+                        text_list = [p.get("text", "") for p in parts if isinstance(p, dict) and "text" in p]
+                        content = "\n".join(filter(None, text_list)).strip()
+                    if not content:
+                        content = res_obj.get("reply", "") or res_json.get("reply", "") or ""
                     if content:
                         ok = True
                 except Exception:
