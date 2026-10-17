@@ -165,7 +165,7 @@ class RobertTokenRingEngine:
         status_msg = ""
 
         try:
-            resp = requests.post(endpoint, json=payload, headers=headers, timeout=20)
+            resp = requests.post(endpoint, json=payload, headers=headers, timeout=35)
             if resp.status_code == 200:
                 try:
                     res_json = resp.json()
