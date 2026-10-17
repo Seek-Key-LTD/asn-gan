@@ -311,11 +311,12 @@ FLEET_AGENT_CARDS: Dict[str, AgentCard] = {
         key="meigui",
         display_name="玫瑰",
         soul_name="绯云",
-        node="ash1",
+        node="onecloud1",
         constellation_house="Pleiades (Maia)",
         matrix_id="@meigui:matrix.git4ta.fun",
         team="flower",
         role_description="连绵对韵 · 玫瑰仙子",
+        a2a_endpoint="http://100.98.209.50:18790/a2a",
         avatars={"court": "🌸 程序合议员 · 玫瑰仙子", "honglou": "🌹 玫瑰花神", "fengyue": "玫瑰绝色"}
     ),
     "moli": AgentCard(
@@ -346,11 +347,12 @@ FLEET_AGENT_CARDS: Dict[str, AgentCard] = {
         key="qiangwei",
         display_name="蔷薇",
         soul_name="金波",
-        node="ash2",
+        node="onecloud2",
         constellation_house="Pleiades (Alcyone)",
         matrix_id="@qiangwei:matrix.git4ta.fun",
         team="flower",
         role_description="锐意争锋 · 蔷薇仙子",
+        a2a_endpoint="http://100.88.180.59:18790/a2a",
         avatars={"court": "🌸 辩论监督员 · 蔷薇仙子", "honglou": "🌺 蔷薇花神", "fengyue": "蔷薇烈烈"}
     ),
     "tumi": AgentCard(
