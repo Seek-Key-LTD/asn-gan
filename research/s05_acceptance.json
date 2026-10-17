@@ -1,0 +1,48 @@
+{
+  "all_passed": true,
+  "failed_reasons": [],
+  "metrics": [
+    {
+      "idx": 1,
+      "persona": "庐阳先生",
+      "k_agent": "k-agent-moli@ch1",
+      "status": "🟢 Live A2A",
+      "live_a2a": true,
+      "chars": 283,
+      "duration_s": 9.96,
+      "passed": true
+    },
+    {
+      "idx": 2,
+      "persona": "敦煌先生",
+      "k_agent": "k-agent-muxu@ch2",
+      "status": "🟢 Live A2A",
+      "live_a2a": true,
+      "chars": 303,
+      "duration_s": 34.18,
+      "passed": true
+    },
+    {
+      "idx": 3,
+      "persona": "十渡先生",
+      "k_agent": "k-agent-tumi@ash1",
+      "status": "🟢 Live A2A",
+      "live_a2a": true,
+      "chars": 352,
+      "duration_s": 27.71,
+      "passed": true
+    },
+    {
+      "idx": 4,
+      "persona": "渔阳先生",
+      "k_agent": "k-agent-zhuyu@ash2",
+      "status": "🟢 Live A2A",
+      "live_a2a": true,
+      "chars": 344,
+      "duration_s": 24.17,
+      "passed": true
+    }
+  ],
+  "total_seats": 4,
+  "live_seats_count": 4
+}
