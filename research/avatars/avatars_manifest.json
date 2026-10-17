@@ -1,0 +1,56 @@
+[
+  {
+    "key": "moli",
+    "name": "茉莉仙子",
+    "soul": "秋香",
+    "file": "/home/ben/code/gitea/kunpengzhi-ai/research/avatars/moli.png",
+    "size_kb": 1025.9,
+    "minio_url": "https://minio-s3.capitaltrain.cn/flowers/avatars/moli.png",
+    "r2_path": "r2/flowers/avatars/moli.png"
+  },
+  {
+    "key": "muxu",
+    "name": "苜蓿仙子",
+    "soul": "碧涛",
+    "file": "/home/ben/code/gitea/kunpengzhi-ai/research/avatars/muxu.png",
+    "size_kb": 1172.4,
+    "minio_url": "https://minio-s3.capitaltrain.cn/flowers/avatars/muxu.png",
+    "r2_path": "r2/flowers/avatars/muxu.png"
+  },
+  {
+    "key": "tumi",
+    "name": "荼蘼仙子",
+    "soul": "青黛",
+    "file": "/home/ben/code/gitea/kunpengzhi-ai/research/avatars/tumi.png",
+    "size_kb": 1111.1,
+    "minio_url": "https://minio-s3.capitaltrain.cn/flowers/avatars/tumi.png",
+    "r2_path": "r2/flowers/avatars/tumi.png"
+  },
+  {
+    "key": "zhuyu",
+    "name": "茱萸仙子",
+    "soul": "霁月",
+    "file": "/home/ben/code/gitea/kunpengzhi-ai/research/avatars/zhuyu.png",
+    "size_kb": 1296.9,
+    "minio_url": "https://minio-s3.capitaltrain.cn/flowers/avatars/zhuyu.png",
+    "r2_path": "r2/flowers/avatars/zhuyu.png"
+  },
+  {
+    "key": "meigui",
+    "name": "玫瑰仙子",
+    "soul": "绯云",
+    "file": "/home/ben/code/gitea/kunpengzhi-ai/research/avatars/meigui.png",
+    "size_kb": 1126.8,
+    "minio_url": "https://minio-s3.capitaltrain.cn/flowers/avatars/meigui.png",
+    "r2_path": "r2/flowers/avatars/meigui.png"
+  },
+  {
+    "key": "qiangwei",
+    "name": "蔷薇仙子",
+    "soul": "金波",
+    "file": "/home/ben/code/gitea/kunpengzhi-ai/research/avatars/qiangwei.png",
+    "size_kb": 1203.5,
+    "minio_url": "https://minio-s3.capitaltrain.cn/flowers/avatars/qiangwei.png",
+    "r2_path": "r2/flowers/avatars/qiangwei.png"
+  }
+]
