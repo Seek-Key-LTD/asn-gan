@@ -1,6 +1,6 @@
 """RobertTokenRingEngine — 完整令牌环庭审引擎（黄道内阁版）
 从 6a5d8ee 原版逻辑适配 VAULT_ZODIAC_CABINETS 结构：
-token_holder 令牌持有 / 定向接话共享上下文 / 前发言人陈词 / 极昼全量记忆。
+token_holder 令牌持有 / 定向接话共享上下文 / 前发言人陈词 / 正典卷宗全量记忆。
 
 互通策略（v2 定向接话，替代 v1 全量广播）：
 - 起诉书锚点：全局唯一，始终注入（控方立场权威文本）
@@ -78,14 +78,13 @@ class RobertTokenRingEngine:
                 f"（审理机构：{court}；完整指控与证据链由令牌环庭审逐阶段生成）"
             )
         return (
-            f"【起诉书】就《极昼》案，指控尊长（原中煤集团党组成员，2026年8月3日被带至"
-            f"安徽省阜阳市留置）涉嫌违规参与民间借贷、利用职务影响力为亲友企业拆借资金。"
-            f"（场景：{self.scenario}；完整指控与证据链由令牌环庭审逐阶段生成）"
+            f"【立论/主张书】就《三更道场·第五期·陨》案，探讨深空引力、极端气候地质年鉴与系统合法性解释权危机。"
+            f"（场景：{self.scenario}；完整交锋与证据链由令牌环逐阶段生成）"
         )
 
     # ---- 完整令牌环发言 ----
     def execute_speech(self, seat_info, instruction):
-        """按令牌环发言：持令牌者基于定向接话上下文 + 极昼全量记忆发言"""
+        """按令牌环发言：持令牌者基于定向接话上下文 + 案卷全量记忆发言"""
         avatars = seat_info.get("avatars", {})
         header = avatars.get(self.scenario, avatars.get("court", seat_info.get("en_key", "席位")))
         k_agent = seat_info.get("k_agent_target") or f"k-agent-{en_key}@{seat_info.get('node', 'fleet')}"

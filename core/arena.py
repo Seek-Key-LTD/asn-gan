@@ -122,7 +122,7 @@ class ArenaSession:
             return
         t0 = time.time()
         recent = "\n\n".join(f"【{h}】:\n{c[:800]}" for h, c in history[-4:])
-        for side, coach in (("控方", "阜阳市检察院副检察长（控方幕后）"),
+        for side, coach in (("控方", "事实法医审计首席（控方幕后）"),
                             ("辩方", "律所主任（辩方幕后）")):
             score = self._ask_json(
                 COACH_MODEL,

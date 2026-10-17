@@ -417,3 +417,7 @@ class AgentCardRegistry:
     @classmethod
     def list_all(cls) -> List[AgentCard]:
         return list(FLEET_AGENT_CARDS.values())
+
+# 向下兼容别名映射
+VAULT_ZODIAC_CABINETS = {c.key: c.to_seat_dict() for c in AgentCardRegistry.list_cabinet()}
+FLOWER_PLEIADES_TABLE = {c.key: c.to_seat_dict() for c in AgentCardRegistry.list_flowers()}

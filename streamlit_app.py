@@ -1,5 +1,6 @@
+from core.db import load_dossier
 """
-🦅 鲲鹏志 · 《极昼》案 12 黄道内阁与小花组 (加锁保护与 LXC 落宫规划)
+⚡ ASN-GAN · 代理化社交网络对抗生成引擎 (12 黄道内阁与小花组) (加锁保护与 LXC 落宫规划)
 =================================================================================
 1. 🔐 Staging 云端防泄露访问控制：
    - PIN 码锁：简单 4 位密码 (默认 `3131`)。
@@ -150,7 +151,7 @@ def check_password():
             pin_input = st.text_input("🔑 访客 PIN 码：", type="password", key="pin_lock_input")
             if pin_input == "142857":
                 st.session_state.authenticated = True
-                st.success("🔓 验证通过！正在进入《极昼》演练界面...")
+                st.success("🔓 验证通过！正在进入 ASN-GAN 对抗生成界面...")
                 time.sleep(0.4)
                 st.rerun()
             elif pin_input:
@@ -167,7 +168,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "sk-47318")
 
 # 场景模式选择
 SCENARIOS = {
-    "court": "⚖️ 《极昼》严肃刑事法庭模式",
+    "court": "⚖️ ASN-GAN 庭辩朝堂模式",
     "honglou": "📿 《红楼梦》贾府大观园模式",
     "fengyue": "🍶 潇洒风月风流雅集模式"
 }
@@ -198,7 +199,7 @@ FLOWER_PLEIADES_TABLE = {
 
 # 补充合议指令 (场景化指令)
 _FLOWER_INSTRUCTIONS = {
-    "meigui": "你是昴宿一【玫瑰】。针对庭审发表程序合议评议：复核阜阳留置与最高法指定管辖程序，重点评议《刑法》第12条从旧兼从轻对2016年4月新规的阻断效力！",
+    "meigui": "你是昴宿一【玫瑰】。针对庭审发表程序合议评议：复核深空物理与人间解释权传导程序，重点评议《刑法》第12条从旧兼从轻对2016年4月新规的阻断效力！",
     "qiangwei": "你是昴宿二【蔷薇】。针对庭审发表实体证据合议评议：复核1000万10次平价还本水单，确认中煤账目零亏空，认定四大罪名完全不成立！",
     "tumi": "你是昴宿三【荼蘼】。针对庭审发表社会常情合议评议：还原2015-2016山河四省最冷冬天的真实背景，认定尊长救助亲家属于无罪义举！",
     "zhuyu": "你是昴宿四【茱萸】。针对庭审发表刑法谦抑性评议：强调无财物收受与权钱交易对价时，不得以道德或拟制罪名构陷无辜！",
@@ -297,7 +298,7 @@ if "material_text" not in st.session_state:
 
 
 def get_stages():
-    """阶段流从当前契约读取（无契约时回退内置极昼）"""
+    """阶段流从当前契约读取（无契约时回退内置S05·陨）"""
     c = st.session_state.get("contract")
     if c and c.get("stage_flow"):
         return c["stage_flow"]
@@ -480,7 +481,7 @@ def build_court_markdown() -> str:
 def save_court_transcript() -> str:
     from core.archive import save_run
     return save_run(
-        "法庭", "极昼-阜阳中院", build_court_markdown(),
+        "法庭", "S05-ASN庭辩朝堂", build_court_markdown(),
         {"steps": len(st.session_state.get("messages", [])), "scenario": selected_scenario_key},
     )
 
@@ -499,7 +500,7 @@ with right_col:
 
 with mid_col:
     cur_c = st.session_state.get("contract") or default_contract()
-    st.markdown(f'<div class="main-title">⚖️ 鲲鹏志 · 《{cur_c["meta"].get("title", "极昼")}》 12 黄道与紫罗兰掌门法庭</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="main-title">⚡ ASN-GAN · 《{cur_c["meta"].get("title", "第五期 · 陨")}》 代理化社交网络对抗生成朝堂</div>', unsafe_allow_html=True)
     cur_c = st.session_state.get("contract") or default_contract()
     st.markdown(f'<div class="sub-title">☀️ 12 黄道内阁 + 🌸 昴宿七姐妹 · 剧本：<b>{cur_c["meta"].get("title", "?")}</b> · 协议：<b>{cur_c.get("protocol")}</b> · {len(cur_c.get("acts", []))} 幕</div>', unsafe_allow_html=True)
 
@@ -523,7 +524,7 @@ with mid_col:
             with col_a:
                 compile_btn = st.button("🧪 编译剧本", use_container_width=True)
             with col_b:
-                load_jizhou_btn = st.button("📥 载入《极昼》", use_container_width=True)
+                load_s05_btn = st.button("📥 载入《S05·陨》", use_container_width=True)
             if compile_btn:
                 if new_material.strip():
                     with st.spinner("🎬 编剧室编译中（解析→绑定→挂载→校验）..."):
@@ -580,20 +581,21 @@ with mid_col:
                 else:
                     st.caption("无 dossiers/论述 注册表（可先在仓库添加）")
             else:
-                case_opts = ["dossiers/极昼/极昼.md", "dossiers/极昼/反方弹药-恶意揣测.md", "dossiers/似有暗香来/红色剧本杀——似有暗香来.md"]
+                case_opts = ["S05 · 第五期《陨》(陨石与解释权)", "S01 · 第一期《丹》", "S02 · 第二期《哗》", "S04 · 第四期《玺》", "S08.5 · 天权《银道》", "S12 · 第十二期《黄道》"]
                 sel_case = st.selectbox("📁 案卷", case_opts, key="rag_case")
-                if st.button("📥 载入案卷", use_container_width=True, key="rag_case_btn"):
-                    text = load_material("case", sel_case)
-                    if text:
-                        st.session_state.material_text = text
-                        st.session_state.rag_source = sel_case
+                if st.button("📥 载入正典卷宗", use_container_width=True, key="rag_case_btn"):
+                    ep_key = sel_case.split(" · ")[0].strip()
+                    d = load_dossier(ep_key)
+                    if d:
+                        st.session_state.material_text = d["content_md"]
+                        st.session_state.rag_source = d["title"]
                         st.session_state.messages = []
                         st.session_state.indictment_text = ""
                         st.session_state.current_stage_id = 0
-                        st.success(f"✅ 已载入 {sel_case}（{len(text)} 字符）")
+                        st.success(f"✅ 已载入 {d['title']}（{d['word_count']} 字符）")
                         st.rerun()
                     else:
-                        st.warning("文件不存在")
+                        st.warning(f"数据库中未找到 {ep_key} 卷宗，请先运行 ingest 导入！")
             if st.session_state.get("rag_source"):
                 st.caption(f"当前素材源：{st.session_state.rag_source}")
 
@@ -627,16 +629,24 @@ with mid_col:
             else:
                 st.warning("暂无庭审笔录可保存")
 
-    article_text = st.session_state.get("material_text") or load_research_file("dossiers/极昼/极昼.md")
-    cur_title = (st.session_state.get("contract") or default_contract())["meta"].get("title", "极昼")
+    # 默认从数据库底座读取 S05 陨石正典
+    if "material_text" not in st.session_state:
+        s05_dossier = load_dossier("S05")
+        if s05_dossier:
+            st.session_state.material_text = s05_dossier["content_md"]
+            st.session_state.rag_source = s05_dossier["title"]
+    article_text = st.session_state.get("material_text", "")
+    cur_c = st.session_state.get("contract") or default_contract()
+    cur_title = cur_c["meta"].get("title", "第五期 · 陨")
 
-    with st.expander(f"📌 当前素材全文（{cur_title}）", expanded=False):
-        st.markdown("### **案由：尊长涉嫌利用影响力受贿罪、国有公司人员失职罪案**")
+    with st.expander(f"📌 当期正典卷宗全文与核心公式（{cur_title}）", expanded=False):
+        st.markdown(f"### **议题：{cur_c['meta'].get('topic', '天火、深空引力与系统解释权')}**")
         col1, col2 = st.columns(2)
         with col1:
-            st.info("**留置事实**：2026年8月3日从住处带走送至安徽阜阳留置，由阜阳市监委移送阜阳市检察院审查起诉。")
+            st.info(f"**核心公式**：{cur_c['meta'].get('core_formula', '深空引力输入 ➔ 极端气候地质年鉴 ➔ 社会感知 ➔ 政治解释 ➔ 合法性危机 ➔ 秩序重置')}")
         with col2:
-            st.success("**辩方四罪排除**：受贿、滥用职权、贪污、高利转贷完全不成立，从旧兼从轻。")
+            st.success(f"**争议焦点**：{cur_c['meta'].get('focus', '引力熵到政治熵的传导链；系统如何失去解释权')}")
+        st.caption(f"**案卷事实**：{cur_c['meta'].get('key_facts', '')}")
         
         if article_text:
             st.markdown(f'<div style="background:#f8f9fa;padding:10px;border-left:4px solid #B71C1C;font-size:0.88rem;max-height:180px;overflow-y:auto;">{article_text[:2500]}...\n\n*(共 {len(article_text)} 字符全量案卷)*</div>', unsafe_allow_html=True)
@@ -686,8 +696,8 @@ with mid_col:
             st.session_state.indictment_text = indictment_text
             # 流式会话文件：边跑边写，中断不丢已发言
             from core.archive import open_stream, append_stream
-            title = meta.get("title") or "极昼"
-            court = meta.get("court_name") or "阜阳中院"
+            title = meta.get("title") or "S05·陨"
+            court = meta.get("court_name") or "ASN庭辩朝堂"
             path, filename, ts = open_stream("法庭", f"{title}-{court}")
             st.session_state.stream_path, st.session_state.stream_file, st.session_state.stream_ts = path, filename, ts
             append_stream(path, f"📜 起诉书 ({case_no or '未编号'})", indictment_text)
@@ -742,8 +752,8 @@ with mid_col:
         progress_bar.progress(1.0, text="⚖️ 全流程落幕！全案笔录已永久驻留！")
         try:
             from core.archive import close_stream
-            title = meta.get("title") or "极昼"
-            court = meta.get("court_name") or "阜阳中院"
+            title = meta.get("title") or "S05·陨"
+            court = meta.get("court_name") or "ASN庭辩朝堂"
             fname = close_stream(
                 st.session_state["stream_path"], st.session_state["stream_file"],
                 st.session_state["stream_ts"], "法庭", f"{title}-{court}",

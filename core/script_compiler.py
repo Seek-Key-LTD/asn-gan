@@ -62,8 +62,8 @@ def parse_source(client, article_text: str) -> dict:
   "source_type": "素材类型（如：留置案/纪实/小说章节/社会事件）",
   "defendant": "被告/主角姓名（无则空串）",
   "charge": "指控罪名或核心冲突（一句话）",
-  "court_name": "审理机构（如：安徽省阜阳市中级人民法院；无法判断则空串）",
-  "prosecutor_org": "控方/发起方（如：阜阳市人民检察院；无则空串）",
+  "court_name": "审理机构（如：ASN-GAN庭辩朝堂；无法判断则空串）",
+  "prosecutor_org": "控方/发起方（如：事实审计公诉团队；无则空串）",
   "case_number": "案号（无则空串）",
   "key_facts": "2-3 条关键事实（分号分隔）",
   "prosecution_claim": "控方主张（指控的核心逻辑）",
@@ -176,20 +176,20 @@ def compile_contract(
 
         ok, problems = validate_contract(contract)
         if not ok:
-            logger.warning("契约校验未通过，回退内置极昼契约: %s", problems[:3])
+            logger.warning("契约校验未通过，回退内置S05正典契约: %s", problems[:3])
             fb = default_contract()
-            fb["meta"]["compile_note"] = f"编译校验失败({problems[0]})，已回退内置极昼契约"
+            fb["meta"]["compile_note"] = f"编译校验失败({problems[0]})，已回退内置S05正典契约"
             return fb
         return contract
     except CompileError as e:
         logger.warning("编译失败，回退内置契约: %s", e)
         fb = default_contract()
-        fb["meta"]["compile_note"] = f"编译失败({str(e)[:60]})，已回退内置极昼契约"
+        fb["meta"]["compile_note"] = f"编译失败({str(e)[:60]})，已回退内置S05正典契约"
         return fb
     except Exception as e:  # 网络/LLM 全面兜底
         logger.warning("编译异常，回退内置契约: %s", e)
         fb = default_contract()
-        fb["meta"]["compile_note"] = f"编译异常({str(e)[:60]})，已回退内置极昼契约"
+        fb["meta"]["compile_note"] = f"编译异常({str(e)[:60]})，已回退内置S05正典契约"
         return fb
 
 
